@@ -19,18 +19,18 @@
 #include "glTypes.h"
 
 /*-----------------------------------------------------------------------------
-                           
+
 -----------------------------------------------------------------------------*/
 
-GLquat glQuat (float x, float y, float z, float w)
+GLquat glQuat ( float x, float y, float z, float w )
 {
 
-  GLquat result;
-
-  result.x = x;
-  result.y = y;
-  result.z = z;
-  result.w = w;
-  return result;
-
+	GLquat result;
+	
+	result.x = x;
+	result.y = y;
+	result.z = z;
+	result.w = w;
+	return result;
+	
 }

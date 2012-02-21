@@ -28,21 +28,21 @@ static class CEntity*       head;
 
 -----------------------------------------------------------------------------*/
 
-void EntityUpdate (void)
+void EntityUpdate ( void )
 {
 
 	CEntity*        e;
-
-	for (e = head; e; e = e->Next ()) 
+	
+	for ( e = head; e; e = e->Next () )
 		e->Update ();
-
+		
 }
 
 /*-----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------*/
 
-void EntityInit (void)
+void EntityInit ( void )
 {
 
 
@@ -54,116 +54,116 @@ void EntityInit (void)
 
 -----------------------------------------------------------------------------*/
 
-CEntity* EntityFindType (char* type, CEntity* start)
+CEntity* EntityFindType ( char* type, CEntity* start )
 {
 
 	CEntity*    e;
-
-	if (!start)
+	
+	if ( !start )
 		start = head;
-	for (e = start; e; e = e->Next ()) {
-		if (!_stricmp (type, e->Type ()))
+	for ( e = start; e; e = e->Next () ) {
+		if ( !_stricmp ( type, e->Type () ) )
 			return e;
 	}
 	return NULL;
-
+	
 }
 
 /*-----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------*/
 
-void EntityTerm (void)
+void EntityTerm ( void )
 {
 
 	CEntity*    e;
 	CEntity*    next;
-
+	
 	e = head;
-	while (e) {
+	while ( e ) {
 		next = e->Next ();
 		delete e;
 		e = next;
 	}
-
+	
 }
 
 /*-----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------*/
 
-void EntityRender (void)
+void EntityRender ( void )
 {
 
 	class CEntity*  e;
-
-	for (e = head; e; e = e->Next ())
+	
+	for ( e = head; e; e = e->Next () )
 		e->Render ();
-
+		
 }
 
 /*-----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------*/
 
-void EntityRenderFadeIn (void)
+void EntityRenderFadeIn ( void )
 {
 
 	class CEntity*  e;
-
-	for (e = head; e; e = e->Next ())
+	
+	for ( e = head; e; e = e->Next () )
 		e->RenderFadeIn ();
-
+		
 }
 
 /*-----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------*/
 
-void EntityFadeStart (void)
+void EntityFadeStart ( void )
 {
 
 	class CEntity*  e;
-
-	for (e = head; e; e = e->Next ())
+	
+	for ( e = head; e; e = e->Next () )
 		e->FadeStart ();
-
+		
 }
 
 /*-----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------*/
 
-CEntity::CEntity (void)
+CEntity::CEntity ( void )
 {
 
 	next = head;
 	head = this;
 	m_entity_type = "none";
-
+	
 }
 
-class CEntity* CEntity::Next (void)
+class CEntity* CEntity::Next ( void )
 {
 
 	return next;
-
+	
 }
 
-void CEntity::Render (void)
+void CEntity::Render ( void )
 {
 
 }
 
-void CEntity::RenderFadeIn (void)
+void CEntity::RenderFadeIn ( void )
 {
 
 	//by default, perfom a normal render for the LOD fade-in
 	Render ();
-
+	
 }
 
-void CEntity::Update (void)
+void CEntity::Update ( void )
 {
 
 
@@ -179,5 +179,5 @@ char* CEntity::Type ()
 {
 
 	return m_entity_type;
-
+	
 }

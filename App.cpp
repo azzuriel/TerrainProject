@@ -6,7 +6,7 @@ App.cpp
 
 -------------------------------------------------------------------------------
 
-This module contains the core of the program.  
+This module contains the core of the program.
 
 -----------------------------------------------------------------------------*/
 
@@ -26,7 +26,6 @@ This module contains the core of the program.
 
 #pragma comment (lib, "opengl32.lib")
 #pragma comment (lib, "glu32.lib")
-#pragma comment (lib, "GLaux.lib")
 
 static bool           quit;
 static HINSTANCE      instance;
@@ -39,7 +38,7 @@ HINSTANCE AppInstance ()
 {
 
 	return instance;
-
+	
 }
 
 
@@ -51,15 +50,15 @@ void AppQuit ()
 {
 
 	quit = true;
-
+	
 }
 
 /*-----------------------------------------------------------------------------
 W i n M a i n
 -----------------------------------------------------------------------------*/
 
-int PASCAL WinMain (HINSTANCE instance_in, HINSTANCE previous_instance,
-	LPSTR command_line, int show_style)
+int PASCAL WinMain ( HINSTANCE instance_in, HINSTANCE previous_instance,
+					 LPSTR command_line, int show_style )
 {
 
 	MSG		  msg;
@@ -73,13 +72,13 @@ int PASCAL WinMain (HINSTANCE instance_in, HINSTANCE previous_instance,
 	MapTextureInit ();
 	WorldInit ();
 	EntityInit ();
-	while (!quit) {
-		if (PeekMessage(&msg,NULL,0,0,PM_REMOVE))	{
-			if (msg.message == WM_QUIT)	
+	while ( !quit ) {
+		if ( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )	{
+			if ( msg.message == WM_QUIT )
 				quit = true;
 			else {
-				TranslateMessage(&msg);				// Translate The Message
-				DispatchMessage(&msg);				// Dispatch The Message
+				TranslateMessage( &msg );				// Translate The Message
+				DispatchMessage( &msg );				// Dispatch The Message
 			}
 		} else	{
 			//update
@@ -89,7 +88,7 @@ int PASCAL WinMain (HINSTANCE instance_in, HINSTANCE previous_instance,
 			MapTextureUpdate ();
 			WorldUpdate ();
 			RenderUpdate ();
-			Sleep (1);
+			Sleep ( 1 );
 		}
 	}
 	EntityTerm ();
@@ -102,6 +101,6 @@ int PASCAL WinMain (HINSTANCE instance_in, HINSTANCE previous_instance,
 	ConsoleTerm ();
 	WinTerm ();
 	return 0;
-
+	
 }
 

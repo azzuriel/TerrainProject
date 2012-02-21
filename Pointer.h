@@ -2,8 +2,7 @@
 #include "entity.h"
 #endif
 
-struct point
-{
+struct point {
 	int   x;
 	int   y;
 };
@@ -17,12 +16,12 @@ private:
 	point                   m_last_cell;
 	int                     m_texture;
 	float                   m_pulse;
-
+	
 public:
 	CPointer ();
-
-	void                    RenderFade (void);
-	void                    Render (void);
-	void                    Update (void);
-	point                   Selected (void);
+	
+	void                    RenderFade ( void );
+	void                    Render ( void );
+	void                    Update ( void );
+	point                   Selected ( void );
 };
