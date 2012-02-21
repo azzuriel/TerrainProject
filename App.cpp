@@ -9,20 +9,7 @@ App.cpp
 This module contains the core of the program.
 
 -----------------------------------------------------------------------------*/
-
-#include <windows.h>
-
-#include "app.h"
-#include "camera.h"
-#include "console.h"
-#include "entity.h"
-#include "glTypes.h"
-#include "map.h"
-#include "maptexture.h"
-#include "render.h"
-#include "texture.h"
-#include "win.h"
-#include "world.h"
+#include "precompiled.h"
 
 #pragma comment (lib, "opengl32.lib")
 #pragma comment (lib, "glu32.lib")
@@ -34,7 +21,7 @@ static HINSTANCE      instance;
 
 -----------------------------------------------------------------------------*/
 
-HINSTANCE AppInstance ()
+HINSTANCE AppInstance()
 {
 
 	return instance;
@@ -46,7 +33,7 @@ HINSTANCE AppInstance ()
 
 -----------------------------------------------------------------------------*/
 
-void AppQuit ()
+void AppQuit()
 {
 
 	quit = true;
@@ -57,24 +44,24 @@ void AppQuit ()
 W i n M a i n
 -----------------------------------------------------------------------------*/
 
-int PASCAL WinMain ( HINSTANCE instance_in, HINSTANCE previous_instance,
-					 LPSTR command_line, int show_style )
+int PASCAL WinMain( HINSTANCE instance_in, HINSTANCE previous_instance,
+					LPSTR command_line, int show_style )
 {
 
 	MSG		  msg;
 	instance = instance_in;
-	WinInit ();
-	ConsoleInit ();
-	CameraInit ();
-	RenderInit ();
-	TextureInit ();
-	MapInit ();
-	MapTextureInit ();
-	WorldInit ();
-	EntityInit ();
-	while ( !quit ) {
-		if ( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )	{
-			if ( msg.message == WM_QUIT )
+	WinInit();
+	ConsoleInit();
+	CameraInit();
+	RenderInit();
+	TextureInit();
+	MapInit();
+	MapTextureInit();
+	WorldInit();
+	EntityInit();
+	while( !quit ) {
+		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )	{
+			if( msg.message == WM_QUIT )
 				quit = true;
 			else {
 				TranslateMessage( &msg );				// Translate The Message
@@ -82,24 +69,24 @@ int PASCAL WinMain ( HINSTANCE instance_in, HINSTANCE previous_instance,
 			}
 		} else	{
 			//update
-			CameraUpdate ();
-			EntityUpdate ();
-			MapUpdate ();
-			MapTextureUpdate ();
-			WorldUpdate ();
-			RenderUpdate ();
-			Sleep ( 1 );
+			CameraUpdate();
+			EntityUpdate();
+			MapUpdate();
+			MapTextureUpdate();
+			WorldUpdate();
+			RenderUpdate();
+			Sleep( 1 );
 		}
 	}
-	EntityTerm ();
-	TextureTerm ();
-	MapTerm ();
-	MapTextureTerm ();
-	WorldTerm ();
-	RenderTerm ();
-	CameraTerm ();
-	ConsoleTerm ();
-	WinTerm ();
+	EntityTerm();
+	TextureTerm();
+	MapTerm();
+	MapTextureTerm();
+	WorldTerm();
+	RenderTerm();
+	CameraTerm();
+	ConsoleTerm();
+	WinTerm();
 	return 0;
 	
 }

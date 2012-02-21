@@ -12,14 +12,7 @@ This loads in textures.  Nothin' fancy.
 
 #define MAX_STRING          128
 
-#include <windows.h>
-#include <stdio.h>
-#include <gl\gl.h>
-#include <gl\glu.h>
-#include "bmp.h"
-#include "glext.h"
-
-#include "console.h"
+#include "precompiled.h"
 
 struct texture {
 	struct texture*   next;

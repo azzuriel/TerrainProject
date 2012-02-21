@@ -10,13 +10,9 @@
 
 -----------------------------------------------------------------------------*/
 
-
 #define M(e,x,y)                (e.elements[x][y])
 
-#include <math.h>
-
-#include "macro.h"
-#include "glTypes.h"
+#include "precompiled.h"
 
 static float      identity[4][4] = {
 	{1.0f, 0.0f, 0.0f, 0.0f},

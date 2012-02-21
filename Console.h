@@ -1,3 +1,3 @@
-void ConsoleInit ( void );
-void ConsoleTerm ();
-void Console ( char *message, ... );
+void ConsoleInit( void );
+void ConsoleTerm();
+void Console( char *message, ... );

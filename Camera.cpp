@@ -16,15 +16,7 @@ point on the terrain.
 #define EYE_HEIGHT        2.0f
 #define MAX_PITCH         85
 
-#include <windows.h>
-#include <math.h>
-
-#include "glTypes.h"
-#include "ini.h"
-#include "macro.h"
-#include "map.h"
-#include "math.h"
-#include "pointer.h"
+#include "precompiled.h"
 
 static GLvector     angle;
 static GLvector     position;
@@ -37,7 +29,7 @@ static bool         moving;
 
 -----------------------------------------------------------------------------*/
 
-void CameraYaw ( float delta )
+void CameraYaw( float delta )
 {
 
 	moving = true;
@@ -49,7 +41,7 @@ void CameraYaw ( float delta )
 
 -----------------------------------------------------------------------------*/
 
-void CameraPitch ( float delta )
+void CameraPitch( float delta )
 {
 
 	moving = true;
@@ -61,14 +53,14 @@ void CameraPitch ( float delta )
 
 -----------------------------------------------------------------------------*/
 
-void CameraPan ( float delta )
+void CameraPan( float delta )
 {
 
 	float           move_x, move_y;
 	
 	moving = true;
-	move_x = ( float )sin ( -angle.y * DEGREES_TO_RADIANS ) / 10.0f;
-	move_y = ( float )cos ( -angle.y * DEGREES_TO_RADIANS ) / 10.0f;
+	move_x = ( float )sin( -angle.y * DEGREES_TO_RADIANS ) / 10.0f;
+	move_y = ( float )cos( -angle.y * DEGREES_TO_RADIANS ) / 10.0f;
 	position.x -= move_y * delta;
 	position.z -= -move_x * delta;
 	
@@ -78,14 +70,14 @@ void CameraPan ( float delta )
 
 -----------------------------------------------------------------------------*/
 
-void CameraForward ( float delta )
+void CameraForward( float delta )
 {
 
 	float           move_x, move_y;
 	
 	moving = true;
-	move_y = ( float )sin ( -angle.y * DEGREES_TO_RADIANS ) / 10.0f;
-	move_x = ( float )cos ( -angle.y * DEGREES_TO_RADIANS ) / 10.0f;
+	move_y = ( float )sin( -angle.y * DEGREES_TO_RADIANS ) / 10.0f;
+	move_x = ( float )cos( -angle.y * DEGREES_TO_RADIANS ) / 10.0f;
 	position.x -= move_y * delta;
 	position.z -= move_x * delta;
 	
@@ -95,7 +87,7 @@ void CameraForward ( float delta )
 
 -----------------------------------------------------------------------------*/
 
-void CameraSelectionPitch ( float delta )
+void CameraSelectionPitch( float delta )
 {
 
 	GLvector      center;
@@ -107,27 +99,27 @@ void CameraSelectionPitch ( float delta )
 	point         selected_cell;
 	
 	moving = true;
-	ptr = ( CPointer* )EntityFindType ( "pointer", NULL );
-	selected_cell = ptr->Selected ();
+	ptr = ( CPointer* )EntityFindType( "pointer", NULL );
+	selected_cell = ptr->Selected();
 	delta *=  movement;
-	if ( selected_cell.x == -1 || selected_cell.y == -1 ) {
+	if( selected_cell.x == -1 || selected_cell.y == -1 ) {
 		angle.x -= delta;
 		return;
 	}
-	center = MapPosition ( selected_cell.x, selected_cell.y );
+	center = MapPosition( selected_cell.x, selected_cell.y );
 	vert_dist = position.y - center.y;
-	yaw_to = MathAngle ( center.x, center.z, position.x, position.z );
-	horz_dist = MathDistance ( center.x, center.z, position.x, position.z );
-	total_dist = MathDistance ( 0.0f, 0.0f, horz_dist, vert_dist );
-	pitch_to = MathAngle ( vert_dist, 0.0f, 0.0f, -horz_dist );
+	yaw_to = MathAngle( center.x, center.z, position.x, position.z );
+	horz_dist = MathDistance( center.x, center.z, position.x, position.z );
+	total_dist = MathDistance( 0.0f, 0.0f, horz_dist, vert_dist );
+	pitch_to = MathAngle( vert_dist, 0.0f, 0.0f, -horz_dist );
 	angle.x += delta;
 	pitch_to += delta;
-	angle.x -= MathAngleDifference ( angle.x, pitch_to ) / 15.0f;
-	vert_dist = ( float )sin ( pitch_to * DEGREES_TO_RADIANS ) * total_dist;
-	horz_dist = ( float )cos ( pitch_to * DEGREES_TO_RADIANS ) * total_dist;
-	position.x = center.x - ( float )sin ( yaw_to * DEGREES_TO_RADIANS ) * horz_dist;
+	angle.x -= MathAngleDifference( angle.x, pitch_to ) / 15.0f;
+	vert_dist = ( float )sin( pitch_to * DEGREES_TO_RADIANS ) * total_dist;
+	horz_dist = ( float )cos( pitch_to * DEGREES_TO_RADIANS ) * total_dist;
+	position.x = center.x - ( float )sin( yaw_to * DEGREES_TO_RADIANS ) * horz_dist;
 	position.y = center.y + vert_dist;
-	position.z = center.z - ( float )cos ( yaw_to * DEGREES_TO_RADIANS ) * horz_dist;
+	position.z = center.z - ( float )cos( yaw_to * DEGREES_TO_RADIANS ) * horz_dist;
 	
 }
 
@@ -135,7 +127,7 @@ void CameraSelectionPitch ( float delta )
 
 -----------------------------------------------------------------------------*/
 
-void CameraSelectionZoom ( float delta )
+void CameraSelectionZoom( float delta )
 {
 
 	GLvector      center;
@@ -145,20 +137,20 @@ void CameraSelectionZoom ( float delta )
 	point         selected_cell;
 	
 	moving = true;
-	ptr = ( CPointer* )EntityFindType ( "pointer", NULL );
-	selected_cell = ptr->Selected ();
+	ptr = ( CPointer* )EntityFindType( "pointer", NULL );
+	selected_cell = ptr->Selected();
 	delta *=  movement;
-	if ( selected_cell.x == -1 || selected_cell.y == -1 ) {
+	if( selected_cell.x == -1 || selected_cell.y == -1 ) {
 		angle.x -= delta;
 		return;
 	}
-	center = MapPosition ( selected_cell.x, selected_cell.y );
-	offset = glVectorSubtract ( position, center );
-	total_dist = glVectorLength ( offset );
-	offset = glVectorNormalize ( offset );
+	center = MapPosition( selected_cell.x, selected_cell.y );
+	offset = glVectorSubtract( position, center );
+	total_dist = glVectorLength( offset );
+	offset = glVectorNormalize( offset );
 	total_dist += delta;
-	offset = glVectorScale ( offset, total_dist );
-	position = glVectorAdd ( center, offset );
+	offset = glVectorScale( offset, total_dist );
+	position = glVectorAdd( center, offset );
 	
 }
 
@@ -166,7 +158,7 @@ void CameraSelectionZoom ( float delta )
 
 -----------------------------------------------------------------------------*/
 
-void CameraSelectionYaw ( float delta )
+void CameraSelectionYaw( float delta )
 {
 
 	GLvector      center;
@@ -178,24 +170,24 @@ void CameraSelectionYaw ( float delta )
 	point         selected_cell;
 	
 	moving = true;
-	ptr = ( CPointer* )EntityFindType ( "pointer", NULL );
-	selected_cell = ptr->Selected ();
+	ptr = ( CPointer* )EntityFindType( "pointer", NULL );
+	selected_cell = ptr->Selected();
 	delta *=  movement;
-	if ( selected_cell.x == -1 || selected_cell.y == -1 ) {
+	if( selected_cell.x == -1 || selected_cell.y == -1 ) {
 		angle.y -= delta;
 		return;
 	}
-	center = MapPosition ( selected_cell.x, selected_cell.y );
+	center = MapPosition( selected_cell.x, selected_cell.y );
 	vert_dist = position.y - center.y;
-	yaw_to = MathAngle ( center.x, center.z, position.x, position.z );
-	horz_dist = MathDistance ( center.x, center.z, position.x, position.z );
-	total_dist = MathDistance ( 0.0f, 0.0f, horz_dist, vert_dist );
-	angle.y -= MathAngleDifference ( angle.y, -yaw_to + 180.0f ) / 15.0f;
+	yaw_to = MathAngle( center.x, center.z, position.x, position.z );
+	horz_dist = MathDistance( center.x, center.z, position.x, position.z );
+	total_dist = MathDistance( 0.0f, 0.0f, horz_dist, vert_dist );
+	angle.y -= MathAngleDifference( angle.y, -yaw_to + 180.0f ) / 15.0f;
 	yaw_to += delta;
 	angle.y -= delta;
-	position.x = center.x - ( float )sin ( yaw_to * DEGREES_TO_RADIANS ) * horz_dist;
+	position.x = center.x - ( float )sin( yaw_to * DEGREES_TO_RADIANS ) * horz_dist;
 	position.y = center.y + vert_dist;
-	position.z = center.z - ( float )cos ( yaw_to * DEGREES_TO_RADIANS ) * horz_dist;
+	position.z = center.z - ( float )cos( yaw_to * DEGREES_TO_RADIANS ) * horz_dist;
 	
 }
 
@@ -203,7 +195,7 @@ void CameraSelectionYaw ( float delta )
 
 -----------------------------------------------------------------------------*/
 
-GLvector CameraPosition ( void )
+GLvector CameraPosition( void )
 {
 
 	return position;
@@ -214,19 +206,19 @@ GLvector CameraPosition ( void )
 
 -----------------------------------------------------------------------------*/
 
-void CameraPositionSet ( GLvector new_pos )
+void CameraPositionSet( GLvector new_pos )
 {
 
 	float     limit;
 	float     elevation;
 	
-	limit = ( float )MapSize ();
+	limit = ( float )MapSize();
 	position = new_pos;
-	position.x = CLAMP ( position.x, -limit, limit );
-	position.y = CLAMP ( position.y, -512.0f, 512.0f );
-	position.z = CLAMP ( position.z, -limit, limit );
-	elevation = MapElevation ( position.x, position.z ) + EYE_HEIGHT;
-	position.y = MAX ( elevation, position.y );
+	position.x = CLAMP( position.x, -limit, limit );
+	position.y = CLAMP( position.y, -512.0f, 512.0f );
+	position.z = CLAMP( position.z, -limit, limit );
+	elevation = MapElevation( position.x, position.z ) + EYE_HEIGHT;
+	position.y = MAX( elevation, position.y );
 	
 }
 
@@ -234,7 +226,7 @@ void CameraPositionSet ( GLvector new_pos )
 
 -----------------------------------------------------------------------------*/
 
-GLvector CameraAngle ( void )
+GLvector CameraAngle( void )
 {
 
 	return angle;
@@ -245,11 +237,11 @@ GLvector CameraAngle ( void )
 
 -----------------------------------------------------------------------------*/
 
-void CameraAngleSet ( GLvector new_angle )
+void CameraAngleSet( GLvector new_angle )
 {
 
 	angle = new_angle;
-	angle.x = CLAMP ( angle.x, -80.0f, 80.0f );
+	angle.x = CLAMP( angle.x, -80.0f, 80.0f );
 	
 }
 
@@ -257,11 +249,11 @@ void CameraAngleSet ( GLvector new_angle )
 
 -----------------------------------------------------------------------------*/
 
-void CameraInit ( void )
+void CameraInit( void )
 {
 
-	angle = IniVector ( "CameraAngle" );
-	position = IniVector ( "CameraPosition" );
+	angle = IniVector( "CameraAngle" );
+	position = IniVector( "CameraPosition" );
 	
 }
 
@@ -269,24 +261,24 @@ void CameraInit ( void )
 
 -----------------------------------------------------------------------------*/
 
-void CameraUpdate ( void )
+void CameraUpdate( void )
 {
 
 	float     limit;
 	float     elevation;
 	
-	if ( moving )
+	if( moving )
 		movement *= 1.1f;
 	else
 		movement = 0.0f;
-	movement = CLAMP ( movement, 0.01f, 1.0f );
-	limit = ( float )MapSize () * 1.5f;
-	position.x = CLAMP ( position.x, -limit, limit );
-	position.y = CLAMP ( position.y, -512.0f, 512.0f );
-	position.z = CLAMP ( position.z, -limit, limit );
-	elevation = MapElevation ( position.x, position.z ) + EYE_HEIGHT;
-	position.y = MAX ( elevation, position.y );
-	angle.x = CLAMP ( angle.x, -MAX_PITCH, MAX_PITCH );
+	movement = CLAMP( movement, 0.01f, 1.0f );
+	limit = ( float )MapSize() * 1.5f;
+	position.x = CLAMP( position.x, -limit, limit );
+	position.y = CLAMP( position.y, -512.0f, 512.0f );
+	position.z = CLAMP( position.z, -limit, limit );
+	elevation = MapElevation( position.x, position.z ) + EYE_HEIGHT;
+	position.y = MAX( elevation, position.y );
+	angle.x = CLAMP( angle.x, -MAX_PITCH, MAX_PITCH );
 	moving = false;
 	
 }
@@ -295,11 +287,11 @@ void CameraUpdate ( void )
 
 -----------------------------------------------------------------------------*/
 
-void CameraTerm ( void )
+void CameraTerm( void )
 {
 
 	//just store our most recent position in the ini
-	IniVectorSet ( "CameraAngle", angle );
-	IniVectorSet ( "CameraPosition", position );
+	IniVectorSet( "CameraAngle", angle );
+	IniVectorSet( "CameraPosition", position );
 	
 }

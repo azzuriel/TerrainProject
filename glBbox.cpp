@@ -12,24 +12,20 @@
 -----------------------------------------------------------------------------*/
 
 #define MAX_VALUE               999999999999999.9f
-
-#include <math.h>
-
-#include "macro.h"
-#include "glTypes.h"
+#include "precompiled.h"
 
 /*-----------------------------------------------------------------------------
 Does the given point fall within the given Bbox?
 -----------------------------------------------------------------------------*/
 
-bool glBboxTestPoint ( GLbbox box, GLvector point )
+bool glBboxTestPoint( GLbbox box, GLvector point )
 {
 
-	if ( point.x > box.max.x || point.x < box.min.x )
+	if( point.x > box.max.x || point.x < box.min.x )
 		return false;
-	if ( point.y > box.max.y || point.y < box.min.y )
+	if( point.y > box.max.y || point.y < box.min.y )
 		return false;
-	if ( point.z > box.max.z || point.z < box.min.z )
+	if( point.z > box.max.z || point.z < box.min.z )
 		return false;
 	return true;
 	
@@ -39,15 +35,15 @@ bool glBboxTestPoint ( GLbbox box, GLvector point )
 Expand Bbox (if needed) to contain given point
 -----------------------------------------------------------------------------*/
 
-GLbbox glBboxContainPoint ( GLbbox box, GLvector point )
+GLbbox glBboxContainPoint( GLbbox box, GLvector point )
 {
 
-	box.min.x = MIN ( box.min.x, point.x );
-	box.min.y = MIN ( box.min.y, point.y );
-	box.min.z = MIN ( box.min.z, point.z );
-	box.max.x = MAX ( box.max.x, point.x );
-	box.max.y = MAX ( box.max.y, point.y );
-	box.max.z = MAX ( box.max.z, point.z );
+	box.min.x = MIN( box.min.x, point.x );
+	box.min.y = MIN( box.min.y, point.y );
+	box.min.z = MIN( box.min.z, point.z );
+	box.max.x = MAX( box.max.x, point.x );
+	box.max.y = MAX( box.max.y, point.y );
+	box.max.z = MAX( box.max.z, point.z );
 	return box;
 	
 }
@@ -56,13 +52,13 @@ GLbbox glBboxContainPoint ( GLbbox box, GLvector point )
 This will invalidate the bbox.
 -----------------------------------------------------------------------------*/
 
-GLbbox glBboxClear ( void )
+GLbbox glBboxClear( void )
 {
 
 	GLbbox      result;
 	
-	result.max = glVector ( -MAX_VALUE, -MAX_VALUE, -MAX_VALUE );
-	result.min = glVector ( MAX_VALUE,  MAX_VALUE,  MAX_VALUE );
+	result.max = glVector( -MAX_VALUE, -MAX_VALUE, -MAX_VALUE );
+	result.min = glVector( MAX_VALUE,  MAX_VALUE,  MAX_VALUE );
 	return result;
 	
 }

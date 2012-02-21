@@ -56,20 +56,7 @@ different program altogether.
 //data file each time.
 #define FORCE_REBUILD     0
 
-
-#include <windows.h>
-#include <math.h>
-#include <stdio.h>
-
-#include "app.h"
-#include "camera.h"
-#include "console.h"
-#include "glTypes.h"
-#include "macro.h"
-#include "math.h"
-#include "texture.h"
-#include "world.h"
-#include "map.h"
+#include "precompiled.h"
 
 struct cell {
 	unsigned char layer[LAYER_COUNT - 1];
@@ -90,7 +77,7 @@ static int            scan_y;
 This will take the given elevations and calculte the resulting surface normal.
 -----------------------------------------------------------------------------*/
 
-static GLvector DoNormal ( float north, float south, float east, float west )
+static GLvector DoNormal( float north, float south, float east, float west )
 {
 
 	GLvector    result;
@@ -98,7 +85,7 @@ static GLvector DoNormal ( float north, float south, float east, float west )
 	result.x = west - east;
 	result.y = 2.0f;
 	result.z = north - south;
-	return glVectorNormalize ( result );
+	return glVectorNormalize( result );
 	
 }
 
@@ -109,13 +96,13 @@ GetPixel, so we get the raw data and use this function to extract arbitrary
 bits and use them to fill a full byte
 -----------------------------------------------------------------------------*/
 
-static unsigned char rgb_sample ( short val, int shift, int numbits )
+static unsigned char rgb_sample( short val, int shift, int numbits )
 {
 
 	unsigned char     r;
 	
 	r = val >> shift;
-	r &= ( int )( pow ( 2.0f, numbits ) - 1 );
+	r &= ( int )( pow( 2.0f, numbits ) - 1 );
 	r = r << ( 8 - numbits );
 	return r & 255;
 	
@@ -125,15 +112,15 @@ static unsigned char rgb_sample ( short val, int shift, int numbits )
 
 -----------------------------------------------------------------------------*/
 
-void MapSave ()
+void MapSave()
 {
 
 	FILE*      f;
 	
-	fopen_s (&f, MAP_FILE, "wb" );
-	fwrite ( map, sizeof ( map ), 1, f );
-	fclose ( f );
-	Console ( "Saved %s (%d bytes)", MAP_FILE, sizeof ( map ) );
+	fopen_s( &f, MAP_FILE, "wb" );
+	fwrite( map, sizeof( map ), 1, f );
+	fclose( f );
+	Console( "Saved %s (%d bytes)", MAP_FILE, sizeof( map ) );
 	
 }
 
@@ -151,7 +138,7 @@ numbers.
 
 -----------------------------------------------------------------------------*/
 
-void MapBuild ( void )
+void MapBuild( void )
 {
 
 	HBITMAP         basemap;
@@ -178,48 +165,48 @@ void MapBuild ( void )
 	//get a couple of temp buffers to use below
 	scale = new float[MAP_CELLS];
 	cmap = new GLrgba [MAP_CELLS];
-	Console ( "size = %d", sizeof ( cell ) );
+	Console( "size = %d", sizeof( cell ) );
 	//now load the bitmap
-	dc = CreateCompatibleDC ( GetDC ( NULL ) );
-	bits = GetDeviceCaps ( dc, BITSPIXEL );
-	pen = CreatePen ( PS_SOLID, 1, RGB ( 0, 255, 0 ) );
-	basemap = ( HBITMAP )LoadImage ( AppInstance (), MAP_IMAGE,
-									 IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE | LR_VGACOLOR );
-	if ( !basemap ) {
-		Console ( "MapInit: Unable to load %s", MAP_IMAGE );
+	dc = CreateCompatibleDC( GetDC( NULL ) );
+	bits = GetDeviceCaps( dc, BITSPIXEL );
+	pen = CreatePen( PS_SOLID, 1, RGB( 0, 255, 0 ) );
+	basemap = ( HBITMAP )LoadImage( AppInstance(), MAP_IMAGE,
+									IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE | LR_VGACOLOR );
+	if( !basemap ) {
+		Console( "MapInit: Unable to load %s", MAP_IMAGE );
 		return;
 	}
-	Console ( "MapBuild: rebuilding map data." );
+	Console( "MapBuild: rebuilding map data." );
 	//call this to fill in the bmi with good values
-	ZeroMemory ( &bmi, sizeof ( BITMAPINFO ) );
-	bmi.bmiHeader.biSize = sizeof ( BITMAPINFOHEADER );
-	SelectObject ( dc, basemap );
-	GetDIBits ( dc, basemap, 0, 0, NULL, &bmi, DIB_RGB_COLORS );
+	ZeroMemory( &bmi, sizeof( BITMAPINFO ) );
+	bmi.bmiHeader.biSize = sizeof( BITMAPINFOHEADER );
+	SelectObject( dc, basemap );
+	GetDIBits( dc, basemap, 0, 0, NULL, &bmi, DIB_RGB_COLORS );
 	width = bmi.bmiHeader.biWidth;
 	height = bmi.bmiHeader.biHeight;
 	basebits = new unsigned char[bmi.bmiHeader.biWidth * bmi.bmiHeader.biHeight * 4];
-	GetBitmapBits ( basemap, bmi.bmiHeader.biSizeImage, basebits );
-	max_x = MIN ( bmi.bmiHeader.biWidth, MAP_SIZE );
-	max_y = MIN ( bmi.bmiHeader.biHeight, MAP_SIZE );
+	GetBitmapBits( basemap, bmi.bmiHeader.biSizeImage, basebits );
+	max_x = MIN( bmi.bmiHeader.biWidth, MAP_SIZE );
+	max_y = MIN( bmi.bmiHeader.biHeight, MAP_SIZE );
 	high = -9999.0f;
 	low = 9999.0f;
 	//now pass over the image and convert the color values to elevation values.
-	for ( y = 0; y < MAP_SIZE; y++ ) {
-		for ( x = 0; x < MAP_SIZE; x++ ) {
-			if ( x == MAP_AREA && y == MAP_AREA )
+	for( y = 0; y < MAP_SIZE; y++ ) {
+		for( x = 0; x < MAP_SIZE; x++ ) {
+			if( x == MAP_AREA && y == MAP_AREA )
 				x = x;
-			xx = CLAMP ( x, 1, ( max_x - 2 ) );
-			yy = CLAMP ( y, 1, ( max_y - 2 ) );
+			xx = CLAMP( x, 1, ( max_x - 2 ) );
+			yy = CLAMP( y, 1, ( max_y - 2 ) );
 			
-			if ( bits == 32 ) {
+			if( bits == 32 ) {
 				b = basebits[( xx + yy * width ) * 4];
 				g = basebits[( xx + yy * width ) * 4 + 1];
 				r = basebits[( xx + yy * width ) * 4 + 2];
 			} else { //we are dealing with a 16 bit color value, use first 5 bits
-				memcpy ( &val, &basebits[( xx + yy * width ) * 2], 2 );
-				b = rgb_sample ( val, 0, 5 );
-				g = rgb_sample ( val, 6, 5 );
-				r = rgb_sample ( val, 11, 5 );
+				memcpy( &val, &basebits[( xx + yy * width ) * 2], 2 );
+				b = rgb_sample( val, 0, 5 );
+				g = rgb_sample( val, 6, 5 );
+				r = rgb_sample( val, 11, 5 );
 			}
 			//Now we have the rgb values, scale them however seems best.
 			e = ( float )( r ) / 30.0f;
@@ -231,16 +218,16 @@ void MapBuild ( void )
 			map[x][y].position.z = ( float )( y - MAP_HALF );
 			map[x][y].shadow = false;
 			//keep track of high/low, which is used to normalize the data later
-			high = MAX ( high, map[x][y].position.y );
-			low = MIN ( low, map[x][y].position.y );
+			high = MAX( high, map[x][y].position.y );
+			low = MIN( low, map[x][y].position.y );
 		}
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////
 	//convert elevations to scalar values 0.0 - 1.0 and copy them to the temp grid
 	/////////////////////////////////////////////////////////////////////////////
-	for ( x = 0; x < MAP_SIZE; x++ ) {
-		for ( y = 0; y < MAP_SIZE; y++ ) {
+	for( x = 0; x < MAP_SIZE; x++ ) {
+		for( y = 0; y < MAP_SIZE; y++ ) {
 			c = &map[x][y];
 			SCALE( x, y ) = ( c->position.y - low ) / ( high - low );
 		}
@@ -248,30 +235,30 @@ void MapBuild ( void )
 	/////////////////////////////////////////////////////////////////////////////
 	//calculate the surface normals
 	/////////////////////////////////////////////////////////////////////////////
-	for ( x = 0; x < MAP_SIZE; x++ ) {
-		for ( y = 0; y < MAP_SIZE; y++ ) {
+	for( x = 0; x < MAP_SIZE; x++ ) {
+		for( y = 0; y < MAP_SIZE; y++ ) {
 			c = &map[x][y];
-			top = WRAP ( ( y - 1 ), MAP_SIZE );
-			bottom = WRAP ( ( y + 1 ), MAP_SIZE );
-			left = WRAP ( ( x - 1 ), MAP_SIZE );
-			right = WRAP ( ( x + 1 ), MAP_SIZE );
-			c->normal = DoNormal ( SCALE( x, top ) * TERRAIN_SCALE,
-								   SCALE( x, bottom ) * TERRAIN_SCALE,
-								   SCALE( right, y ) * TERRAIN_SCALE,
-								   SCALE( left, y ) * TERRAIN_SCALE );
+			top = WRAP(( y - 1 ), MAP_SIZE );
+			bottom = WRAP(( y + 1 ), MAP_SIZE );
+			left = WRAP(( x - 1 ), MAP_SIZE );
+			right = WRAP(( x + 1 ), MAP_SIZE );
+			c->normal = DoNormal( SCALE( x, top ) * TERRAIN_SCALE,
+								  SCALE( x, bottom ) * TERRAIN_SCALE,
+								  SCALE( right, y ) * TERRAIN_SCALE,
+								  SCALE( left, y ) * TERRAIN_SCALE );
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////////
 	//Blend the values in the temp grid and convert back to elevation values
 	/////////////////////////////////////////////////////////////////////////////
-	for ( x = 0; x < MAP_SIZE; x++ ) {
-		for ( y = 0; y < MAP_SIZE; y++ ) {
+	for( x = 0; x < MAP_SIZE; x++ ) {
+		for( y = 0; y < MAP_SIZE; y++ ) {
 			c = &map[x][y];
 			smooth = 0.0f;
 			samples = 0;
-			for ( xx = -BLEND_RANGE; xx <= BLEND_RANGE; xx++ ) {
-				for ( yy = -BLEND_RANGE; yy <= BLEND_RANGE; yy++ ) {
-					smooth += SCALE( CLAMP ( ( x + xx ), 0, MAP_AREA ), CLAMP ( ( y + yy ), 0, MAP_AREA ) );
+			for( xx = -BLEND_RANGE; xx <= BLEND_RANGE; xx++ ) {
+				for( yy = -BLEND_RANGE; yy <= BLEND_RANGE; yy++ ) {
+					smooth += SCALE( CLAMP(( x + xx ), 0, MAP_AREA ), CLAMP(( y + yy ), 0, MAP_AREA ) );
 					samples++;
 				}
 			}
@@ -282,12 +269,12 @@ void MapBuild ( void )
 	/////////////////////////////////////////////////////////////////////////////
 	//calculate the distances
 	/////////////////////////////////////////////////////////////////////////////
-	for ( x = 0; x < MAP_SIZE; x++ ) {
-		for ( y = 0; y < MAP_SIZE; y++ ) {
+	for( x = 0; x < MAP_SIZE; x++ ) {
+		for( y = 0; y < MAP_SIZE; y++ ) {
 			c = &map[x][y];
-			c->distance = glVectorLength ( glVectorSubtract ( c->position, CameraPosition () ) );
+			c->distance = glVectorLength( glVectorSubtract( c->position, CameraPosition() ) );
 			c->distance /= FAR_VIEW;
-			c->distance = CLAMP ( c->distance, 0.0f, 1.0f );
+			c->distance = CLAMP( c->distance, 0.0f, 1.0f );
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////////
@@ -301,29 +288,29 @@ void MapBuild ( void )
 	//time to render.  If we did this using the smoothed out data, it would be
 	//mostly grass everywhere, which would be boring.
 	/////////////////////////////////////////////////////////////////////////////
-	for ( x = 0; x < MAP_SIZE; x++ ) {
-		for ( y = 0; y < MAP_SIZE; y++ ) {
+	for( x = 0; x < MAP_SIZE; x++ ) {
+		for( y = 0; y < MAP_SIZE; y++ ) {
 			c = &map[x][y];
 			c->layer[LAYER_LOWGRASS - 1] = 0;
 			c->layer[LAYER_DIRT - 1] = 0;
 			c->layer[LAYER_SAND - 1] = 0;
 			c->layer[LAYER_ROCK - 1] = 0;
 			//sand is in the lowest parts of the map
-			smooth = MathSmoothStep ( SCALE( x, y ), 0.3f, 0.1f );
+			smooth = MathSmoothStep( SCALE( x, y ), 0.3f, 0.1f );
 			c->layer[LAYER_SAND - 1] = ( int )( smooth * 255.0f );
 			//the deep lush grass likes lowlands and flat areas
-			e = MathSmoothStep ( c->normal.y, 0.75f, 1.0f );
-			smooth = MathSmoothStep ( SCALE( x, y ), 0.45f, 0.25f );
+			e = MathSmoothStep( c->normal.y, 0.75f, 1.0f );
+			smooth = MathSmoothStep( SCALE( x, y ), 0.45f, 0.25f );
 			smooth = ( e * smooth ) * 5.0f;
-			smooth = CLAMP ( smooth, 0, 1 );
+			smooth = CLAMP( smooth, 0, 1 );
 			c->layer[LAYER_LOWGRASS - 1] = ( int )( smooth * 255.0f );
 			//rock likes mild slopes and high elevations
-			e = MathSmoothStep ( c->normal.y, 0.8f, 0.5f );
-			e += MathSmoothStep ( SCALE( x, y ), 0.7f, 1.0f );
-			smooth = CLAMP ( e, 0, 1 );
-			c->layer[LAYER_ROCK - 1] = ( int )( ( smooth ) * 255.0f );
+			e = MathSmoothStep( c->normal.y, 0.8f, 0.5f );
+			e += MathSmoothStep( SCALE( x, y ), 0.7f, 1.0f );
+			smooth = CLAMP( e, 0, 1 );
+			c->layer[LAYER_ROCK - 1] = ( int )(( smooth ) * 255.0f );
 			//dirt likes very steep slopes
-			e = MathSmoothStep ( c->normal.y, 0.7f, 0.4f );
+			e = MathSmoothStep( c->normal.y, 0.7f, 0.4f );
 			c->layer[LAYER_DIRT - 1] = ( int )( e * 255.0f );
 			
 			
@@ -334,25 +321,25 @@ void MapBuild ( void )
 	//were based on the un-smoothed terrain data, which we needed in the previous
 	//step.  Now update the normals with the (more correct) smoothed data.
 	/////////////////////////////////////////////////////////////////////////////
-	for ( x = 0; x < MAP_SIZE; x++ ) {
-		for ( y = 0; y < MAP_SIZE; y++ ) {
+	for( x = 0; x < MAP_SIZE; x++ ) {
+		for( y = 0; y < MAP_SIZE; y++ ) {
 			c = &map[x][y];
-			top = WRAP ( ( y - 1 ), MAP_SIZE );
-			bottom = WRAP ( ( y + 1 ), MAP_SIZE );
-			left = WRAP ( ( x - 1 ), MAP_SIZE );
-			right = WRAP ( ( x + 1 ), MAP_SIZE );
-			c->normal = DoNormal ( map[x][top].position.y,
-								   map[x][bottom].position.y,
-								   map[right][y].position.y,
-								   map[left][y].position.y );
+			top = WRAP(( y - 1 ), MAP_SIZE );
+			bottom = WRAP(( y + 1 ), MAP_SIZE );
+			left = WRAP(( x - 1 ), MAP_SIZE );
+			right = WRAP(( x + 1 ), MAP_SIZE );
+			c->normal = DoNormal( map[x][top].position.y,
+								  map[x][bottom].position.y,
+								  map[right][y].position.y,
+								  map[left][y].position.y );
 		}
 	}
 	//All done.  Let's clean up and store this thing.
 	delete []cmap;
 	delete []scale;
 	delete []basebits;
-	DeleteObject ( basemap );
-	MapSave ();
+	DeleteObject( basemap );
+	MapSave();
 	
 }
 
@@ -360,23 +347,23 @@ void MapBuild ( void )
 
 -----------------------------------------------------------------------------*/
 
-bool MapLoad ()
+bool MapLoad()
 {
 
 	FILE*       f;
 	int         r;
 	
-	fopen_s (&f, MAP_FILE, "rb" );
-	if ( !f ) {
-		Console ( "MapLoad: Unable to load %s", MAP_FILE );
+	fopen_s( &f, MAP_FILE, "rb" );
+	if( !f ) {
+		Console( "MapLoad: Unable to load %s", MAP_FILE );
 		return false;
 	}
-	r = fread ( map, sizeof ( map ), 1, f );
-	if ( r < 1 ) {
-		Console ( "MapLoad: Error loading %s", MAP_FILE );
+	r = fread( map, sizeof( map ), 1, f );
+	if( r < 1 ) {
+		Console( "MapLoad: Error loading %s", MAP_FILE );
 		return false;
 	}
-	fclose ( f );
+	fclose( f );
 	return true;
 	
 }
@@ -385,11 +372,11 @@ bool MapLoad ()
 
 -----------------------------------------------------------------------------*/
 
-void MapInit ( void )
+void MapInit( void )
 {
 
-	if ( !MapLoad () || FORCE_REBUILD )
-		MapBuild ();
+	if( !MapLoad() || FORCE_REBUILD )
+		MapBuild();
 		
 }
 
@@ -398,11 +385,11 @@ void MapInit ( void )
 
 -----------------------------------------------------------------------------*/
 
-float MapElevation ( int x, int y )
+float MapElevation( int x, int y )
 {
 
-	x = CLAMP ( x, 0, MAP_AREA );
-	y = CLAMP ( y, 0, MAP_AREA );
+	x = CLAMP( x, 0, MAP_AREA );
+	y = CLAMP( y, 0, MAP_AREA );
 	return map[x][y].position.y;
 	
 }
@@ -413,7 +400,7 @@ Get the elevation of an arbitrary point over the terrain.  This will
 interpolate between points so that we can have collision with the suface.
 -----------------------------------------------------------------------------*/
 
-float MapElevation ( float x, float y )
+float MapElevation( float x, float y )
 {
 
 	int     cell_x;
@@ -431,11 +418,11 @@ float MapElevation ( float x, float y )
 	dy = ( y - ( float )cell_y );
 	cell_x += MAP_HALF;
 	cell_y += MAP_HALF;
-	y0 = MapElevation ( cell_x, cell_y );
-	y1 = MapElevation ( cell_x + 1, cell_y );
-	y2 = MapElevation ( cell_x, cell_y + 1 );
-	y3 = MapElevation ( cell_x + 1, cell_y + 1 );
-	if ( dx < dy ) {
+	y0 = MapElevation( cell_x, cell_y );
+	y1 = MapElevation( cell_x + 1, cell_y );
+	y2 = MapElevation( cell_x, cell_y + 1 );
+	y3 = MapElevation( cell_x + 1, cell_y + 1 );
+	if( dx < dy ) {
 		c = y2 - y0;
 		b = y3 - y2;
 		a = y0;
@@ -452,7 +439,7 @@ float MapElevation ( float x, float y )
 
 -----------------------------------------------------------------------------*/
 
-int MapSize ()
+int MapSize()
 {
 
 	return MAP_AREA;
@@ -463,11 +450,11 @@ int MapSize ()
 
 -----------------------------------------------------------------------------*/
 
-GLvector MapPosition ( int x, int y )
+GLvector MapPosition( int x, int y )
 {
 
-	x = CLAMP ( x, 0, MAP_AREA );
-	y = CLAMP ( y, 0, MAP_AREA );
+	x = CLAMP( x, 0, MAP_AREA );
+	y = CLAMP( y, 0, MAP_AREA );
 	return map[x][y].position;
 	
 }
@@ -480,15 +467,15 @@ Confusing, but this grid is big and there is no sense in storing half a million
 redundant values.
 -----------------------------------------------------------------------------*/
 
-float MapLayer ( int x, int y, int layer )
+float MapLayer( int x, int y, int layer )
 {
 
 	//the base layer is always opaque
-	if ( layer == LAYER_GRASS )
+	if( layer == LAYER_GRASS )
 		return 1.0f;
 	layer -= 1;
-	x = CLAMP ( x, 0, MAP_AREA );
-	y = CLAMP ( y, 0, MAP_AREA );
+	x = CLAMP( x, 0, MAP_AREA );
+	y = CLAMP( y, 0, MAP_AREA );
 	return ( float )map[x][y].layer[layer] / 255.0f;
 	
 }
@@ -499,11 +486,11 @@ TerrainUpdate () and are rarely 100% accurate.  These are used when calculating
 detail on the terrain.
 -----------------------------------------------------------------------------*/
 
-float MapDistance ( int x, int y )
+float MapDistance( int x, int y )
 {
 
-	x = CLAMP ( x, 0, MAP_AREA );
-	y = CLAMP ( y, 0, MAP_AREA );
+	x = CLAMP( x, 0, MAP_AREA );
+	y = CLAMP( y, 0, MAP_AREA );
 	return map[x][y].distance;
 	
 }
@@ -512,11 +499,11 @@ float MapDistance ( int x, int y )
 The the lighting color of the given point.
 -----------------------------------------------------------------------------*/
 
-GLrgba MapLight ( int x, int y )
+GLrgba MapLight( int x, int y )
 {
 
-	x = CLAMP ( x, 0, MAP_AREA );
-	y = CLAMP ( y, 0, MAP_AREA );
+	x = CLAMP( x, 0, MAP_AREA );
+	y = CLAMP( y, 0, MAP_AREA );
 	return map[x][y].light;
 	
 }
@@ -525,7 +512,7 @@ GLrgba MapLight ( int x, int y )
 
 -----------------------------------------------------------------------------*/
 
-void MapTerm ( void )
+void MapTerm( void )
 {
 
 }
@@ -534,7 +521,7 @@ void MapTerm ( void )
 
 -----------------------------------------------------------------------------*/
 
-void MapUpdate ( void )
+void MapUpdate( void )
 {
 
 	int       x;
@@ -549,11 +536,11 @@ void MapUpdate ( void )
 	cell*     c;
 	unsigned  update_end;
 	
-	light = WorldLightVector ();
-	sun = WorldLightColor ();
-	ambient = WorldAmbientColor ();
-	shadow = glRgbaMultiply ( ambient, glRgba ( 0.3f, 0.5f, 0.9f ) );
-	if ( light.x > 0.0f ) {
+	light = WorldLightVector();
+	sun = WorldLightColor();
+	ambient = WorldAmbientColor();
+	shadow = glRgbaMultiply( ambient, glRgba( 0.3f, 0.5f, 0.9f ) );
+	if( light.x > 0.0f ) {
 		start = MAP_AREA;
 		end = -1;
 		step = -1;
@@ -562,51 +549,51 @@ void MapUpdate ( void )
 		end = MAP_SIZE;
 		step = 1;
 	}
-	if ( light.x == 0.0f )
+	if( light.x == 0.0f )
 		drop = 9999999.0f;
 	else
 		drop = light.y / light.x;
-	drop = ABS ( drop );
-	update_end = GetTickCount () + UPDATE_TIME;
-	while ( GetTickCount () < update_end ) {
+	drop = ABS( drop );
+	update_end = GetTickCount() + UPDATE_TIME;
+	while( GetTickCount() < update_end ) {
 		//pass over the map (either east to west or vice versa) and see which points
 		//are being hit with sunlight.
-		for ( x = start; x != end; x += step ) {
+		for( x = start; x != end; x += step ) {
 			c = &map[x][scan_y];
-			c->distance = glVectorLength ( glVectorSubtract ( c->position, CameraPosition () ) );
+			c->distance = glVectorLength( glVectorSubtract( c->position, CameraPosition() ) );
 			c->distance /= FAR_VIEW;
-			c->distance = CLAMP ( c->distance, 0.0f, 1.0f );
-			if ( x == start ) { //first point is always in sunlight
+			c->distance = CLAMP( c->distance, 0.0f, 1.0f );
+			if( x == start ) {  //first point is always in sunlight
 				top = c->position.y;
 				c->shadow = false;
 			} else {
 				top -= drop;
-				if ( c->position.y > top ) { //is this point high enough to be out of the shadow?
+				if( c->position.y > top ) {  //is this point high enough to be out of the shadow?
 					c->shadow = false;
 					top = c->position.y;
 				} else { //nope!
 					c->shadow = true;
 				}
 			}
-			dot = glVectorDotProduct ( light, c->normal );
-			dot = CLAMP ( dot, 0.0f, 1.0f );
+			dot = glVectorDotProduct( light, c->normal );
+			dot = CLAMP( dot, 0.0f, 1.0f );
 			samples = 0;
 			shade = 0.0f;
 			//blend this shadow with adjoining ones to soften the edges of shadows.
 			//totally not needed, and it slows this down a bit.  You only need this
 			//if the terrain is going to be viewed in close a lot.
-			for ( int xx = -1; xx <= 1; xx++ ) {
-				for ( int yy = -1; yy <= 1; yy++ ) {
-					if ( map[LIMIT( ( x + xx ) )][LIMIT( ( scan_y + yy ) )].shadow )
+			for( int xx = -1; xx <= 1; xx++ ) {
+				for( int yy = -1; yy <= 1; yy++ ) {
+					if( map[LIMIT(( x + xx ) )][LIMIT(( scan_y + yy ) )].shadow )
 						shade += 1.0f;
 					samples++;
 				}
 			}
 			//finally! We know how much light is hitting this point and if it is in shadow
 			//now figure out what color this point is
-			c->light = glRgbaInterpolate (
-						   glRgbaAdd ( ambient, glRgbaScale ( sun, dot ) ),
-						   glRgbaAdd ( shadow, glRgbaScale ( ambient, dot ) ),
+			c->light = glRgbaInterpolate(
+						   glRgbaAdd( ambient, glRgbaScale( sun, dot ) ),
+						   glRgbaAdd( shadow, glRgbaScale( ambient, dot ) ),
 						   shade / ( float )samples );
 		}
 		scan_y = ( scan_y + 1 ) % MAP_SIZE;

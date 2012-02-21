@@ -10,17 +10,13 @@ Various useful math functions.
 
 -----------------------------------------------------------------------------*/
 
-#include <math.h>
-
-#include "macro.h"
-#include "math.h"
-
+#include "precompiled.h"
 
 /*-----------------------------------------------------------------------------
 Get an angle between two given points on a grid
 -----------------------------------------------------------------------------*/
 
-float MathAngle ( float x1, float y1, float x2, float y2 )
+float MathAngle( float x1, float y1, float x2, float y2 )
 {
 
 	float   x_delta;
@@ -29,22 +25,22 @@ float MathAngle ( float x1, float y1, float x2, float y2 )
 	
 	z_delta = ( y1 - y2 );
 	x_delta = ( x1 - x2 );
-	if ( x_delta == 0 ) {
-		if ( z_delta > 0 )
+	if( x_delta == 0 ) {
+		if( z_delta > 0 )
 			return 0.0f;
 		else
 			return 180.0f;
 	}
-	if ( fabs ( x_delta ) < fabs ( z_delta ) ) {
-		angle = 90 - ( float )atan ( z_delta / x_delta ) * RADIANS_TO_DEGREES;
-		if ( x_delta < 0 )
+	if( fabs( x_delta ) < fabs( z_delta ) ) {
+		angle = 90 - ( float )atan( z_delta / x_delta ) * RADIANS_TO_DEGREES;
+		if( x_delta < 0 )
 			angle -= 180.0f;
 	} else {
-		angle = ( float )atan ( x_delta / z_delta ) * RADIANS_TO_DEGREES;
-		if ( z_delta < 0.0f )
+		angle = ( float )atan( x_delta / z_delta ) * RADIANS_TO_DEGREES;
+		if( z_delta < 0.0f )
 			angle += 180.0f;
 	}
-	if ( angle < 0.0f )
+	if( angle < 0.0f )
 		angle += 360.0f;
 	return angle;
 	
@@ -54,7 +50,7 @@ float MathAngle ( float x1, float y1, float x2, float y2 )
 Get distance (squared) between 2 points on a plane
 -----------------------------------------------------------------------------*/
 
-float MathDistance2 ( float x1, float y1, float x2, float y2 )
+float MathDistance2( float x1, float y1, float x2, float y2 )
 {
 
 	float     dx;
@@ -71,7 +67,7 @@ Get distance between 2 points on a plane. This is slightly slower than
 MathDistance2 ()
 -----------------------------------------------------------------------------*/
 
-float MathDistance ( float x1, float y1, float x2, float y2 )
+float MathDistance( float x1, float y1, float x2, float y2 )
 {
 
 	float     dx;
@@ -79,7 +75,7 @@ float MathDistance ( float x1, float y1, float x2, float y2 )
 	
 	dx = x1 - x2;
 	dy = y1 - y2;
-	return ( float )sqrt ( dx * dx + dy * dy );
+	return ( float )sqrt( dx * dx + dy * dy );
 	
 }
 
@@ -87,14 +83,14 @@ float MathDistance ( float x1, float y1, float x2, float y2 )
 difference between two angles
 -----------------------------------------------------------------------------*/
 
-float MathAngleDifference ( float a1, float a2 )
+float MathAngleDifference( float a1, float a2 )
 {
 	float         result;
 	
-	result = ( float )fmod ( a1 - a2, 360.0f );
-	if ( result > 180.0 )
+	result = ( float )fmod( a1 - a2, 360.0f );
+	if( result > 180.0 )
 		return result - 360.0F;
-	if ( result < -180.0 )
+	if( result < -180.0 )
 		return result + 360.0F;
 	return result;
 	
@@ -104,7 +100,7 @@ float MathAngleDifference ( float a1, float a2 )
 interpolate between two values
 -----------------------------------------------------------------------------*/
 
-float MathInterpolate ( float n1, float n2, float delta )
+float MathInterpolate( float n1, float n2, float delta )
 {
 
 	return n1 * ( 1.0f - delta ) + n2 * delta;
@@ -115,14 +111,14 @@ float MathInterpolate ( float n1, float n2, float delta )
 return a scalar of 0.0 to 1.0, based an the given values position within a range
 -----------------------------------------------------------------------------*/
 
-float MathSmoothStep ( float val, float a, float b )
+float MathSmoothStep( float val, float a, float b )
 {
 
-	if ( b == a )
+	if( b == a )
 		return 0.0f;
 	val -= a;
 	val /= ( b - a );
-	return CLAMP ( val, 0.0f, 1.0f );
+	return CLAMP( val, 0.0f, 1.0f );
 	
 }
 
@@ -130,7 +126,7 @@ float MathSmoothStep ( float val, float a, float b )
 Average two values
 -----------------------------------------------------------------------------*/
 
-float MathAverage ( float n1, float n2 )
+float MathAverage( float n1, float n2 )
 {
 
 	return ( n1 + n2 ) / 2.0f;

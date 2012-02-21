@@ -41,24 +41,24 @@ private:
 	long                    m_compile_time;
 	float                   m_tolerance;
 	
-	void                    Compile ( void );
-	void                    CompileBlock ( int x, int y, int size );
-	void                    CompileTriangle ( int x1, int y1, int x2, int y2, int x3, int y3 );
-	void                    CompileVertex ( int x, int y );
-	void                    CompileStrip ( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 );
-	void                    CompileFan ( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5 );
-	void                    CompileFan ( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5, int x6, int y6 );
-	void                    GridStep ( void );
-	void                    DoQuad ( int x, int y, int size );
-	void                    PointActivate ( int x, int y );
+	void                    Compile( void );
+	void                    CompileBlock( int x, int y, int size );
+	void                    CompileTriangle( int x1, int y1, int x2, int y2, int x3, int y3 );
+	void                    CompileVertex( int x, int y );
+	void                    CompileStrip( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 );
+	void                    CompileFan( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5 );
+	void                    CompileFan( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5, int x6, int y6 );
+	void                    GridStep( void );
+	void                    DoQuad( int x, int y, int size );
+	void                    PointActivate( int x, int y );
 	
 public:
 
-	CTerrain ( int size );
-	~CTerrain ();
-	void                    Render ( void );
-	void                    RenderFadeIn ( void );
-	void                    Update ( void );
-	void                    FadeStart ( void );
+	CTerrain( int size );
+	~CTerrain();
+	void                    Render( void );
+	void                    RenderFadeIn( void );
+	void                    Update( void );
+	void                    FadeStart( void );
 	
 };

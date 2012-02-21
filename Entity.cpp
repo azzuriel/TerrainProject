@@ -12,15 +12,7 @@ An entity is any renderable object in the world.  This is an abstract class.
 
 -----------------------------------------------------------------------------*/
 
-#include <windows.h>
-#include <math.h>
-#include <gl\gl.h>
-
-#include "camera.h"
-#include "entity.h"
-#include "map.h"
-#include "sky.h"
-#include "terrain.h"
+#include "precompiled.h"
 
 static class CEntity*       head;
 
@@ -28,13 +20,13 @@ static class CEntity*       head;
 
 -----------------------------------------------------------------------------*/
 
-void EntityUpdate ( void )
+void EntityUpdate( void )
 {
 
 	CEntity*        e;
 	
-	for ( e = head; e; e = e->Next () )
-		e->Update ();
+	for( e = head; e; e = e->Next() )
+		e->Update();
 		
 }
 
@@ -42,7 +34,7 @@ void EntityUpdate ( void )
 
 -----------------------------------------------------------------------------*/
 
-void EntityInit ( void )
+void EntityInit( void )
 {
 
 
@@ -54,15 +46,15 @@ void EntityInit ( void )
 
 -----------------------------------------------------------------------------*/
 
-CEntity* EntityFindType ( char* type, CEntity* start )
+CEntity* EntityFindType( char* type, CEntity* start )
 {
 
 	CEntity*    e;
 	
-	if ( !start )
+	if( !start )
 		start = head;
-	for ( e = start; e; e = e->Next () ) {
-		if ( !_stricmp ( type, e->Type () ) )
+	for( e = start; e; e = e->Next() ) {
+		if( !_stricmp( type, e->Type() ) )
 			return e;
 	}
 	return NULL;
@@ -73,15 +65,15 @@ CEntity* EntityFindType ( char* type, CEntity* start )
 
 -----------------------------------------------------------------------------*/
 
-void EntityTerm ( void )
+void EntityTerm( void )
 {
 
 	CEntity*    e;
 	CEntity*    next;
 	
 	e = head;
-	while ( e ) {
-		next = e->Next ();
+	while( e ) {
+		next = e->Next();
 		delete e;
 		e = next;
 	}
@@ -92,13 +84,13 @@ void EntityTerm ( void )
 
 -----------------------------------------------------------------------------*/
 
-void EntityRender ( void )
+void EntityRender( void )
 {
 
 	class CEntity*  e;
 	
-	for ( e = head; e; e = e->Next () )
-		e->Render ();
+	for( e = head; e; e = e->Next() )
+		e->Render();
 		
 }
 
@@ -106,13 +98,13 @@ void EntityRender ( void )
 
 -----------------------------------------------------------------------------*/
 
-void EntityRenderFadeIn ( void )
+void EntityRenderFadeIn( void )
 {
 
 	class CEntity*  e;
 	
-	for ( e = head; e; e = e->Next () )
-		e->RenderFadeIn ();
+	for( e = head; e; e = e->Next() )
+		e->RenderFadeIn();
 		
 }
 
@@ -120,13 +112,13 @@ void EntityRenderFadeIn ( void )
 
 -----------------------------------------------------------------------------*/
 
-void EntityFadeStart ( void )
+void EntityFadeStart( void )
 {
 
 	class CEntity*  e;
 	
-	for ( e = head; e; e = e->Next () )
-		e->FadeStart ();
+	for( e = head; e; e = e->Next() )
+		e->FadeStart();
 		
 }
 
@@ -134,7 +126,7 @@ void EntityFadeStart ( void )
 
 -----------------------------------------------------------------------------*/
 
-CEntity::CEntity ( void )
+CEntity::CEntity( void )
 {
 
 	next = head;
@@ -143,39 +135,39 @@ CEntity::CEntity ( void )
 	
 }
 
-class CEntity* CEntity::Next ( void )
+class CEntity* CEntity::Next( void )
 {
 
 	return next;
 	
 }
 
-void CEntity::Render ( void )
+void CEntity::Render( void )
 {
 
 }
 
-void CEntity::RenderFadeIn ( void )
+void CEntity::RenderFadeIn( void )
 {
 
 	//by default, perfom a normal render for the LOD fade-in
-	Render ();
+	Render();
 	
 }
 
-void CEntity::Update ( void )
+void CEntity::Update( void )
 {
 
 
 }
 
-void CEntity::FadeStart ()
+void CEntity::FadeStart()
 {
 
 }
 
 
-char* CEntity::Type ()
+char* CEntity::Type()
 {
 
 	return m_entity_type;

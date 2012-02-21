@@ -16,8 +16,8 @@ private:
 	sky_point               m_grid[SKY_GRID][SKY_GRID];
 	
 public:
-	CSky ();
-	void                    Render ( void );
-	void                    Update ( void );
+	CSky();
+	void                    Render( void );
+	void                    Update( void );
 	
 };

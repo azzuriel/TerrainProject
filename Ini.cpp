@@ -17,12 +17,7 @@ This takes various types of data and dumps them into a predefined ini file.
 #define INI_FILE            ".\\" APP ".ini"
 #define SECTION             "Settings"
 
-#include <windows.h>
-#include <stdio.h>
-#include "glTypes.h"
-
-#include "app.h"
-#include "ini.h"
+#include "precompiled.h"
 
 static char                 result[MAX_RESULT];
 
@@ -30,12 +25,12 @@ static char                 result[MAX_RESULT];
 
 -----------------------------------------------------------------------------*/
 
-int IniInt ( char* entry )
+int IniInt( char* entry )
 {
 
 	int         result;
 	
-	result = GetPrivateProfileInt ( SECTION, entry, -1, INI_FILE );
+	result = GetPrivateProfileInt( SECTION, entry, -1, INI_FILE );
 	return result;
 	
 }
@@ -44,13 +39,13 @@ int IniInt ( char* entry )
 
 -----------------------------------------------------------------------------*/
 
-void IniIntSet ( char* entry, int val )
+void IniIntSet( char* entry, int val )
 {
 
 	char        buf[20];
 	
-	sprintf_s ( buf, "%d", val );
-	WritePrivateProfileString ( SECTION, entry, buf, INI_FILE );
+	sprintf_s( buf, "%d", val );
+	WritePrivateProfileString( SECTION, entry, buf, INI_FILE );
 	
 }
 
@@ -58,13 +53,13 @@ void IniIntSet ( char* entry, int val )
 
 -----------------------------------------------------------------------------*/
 
-float IniFloat ( char* entry )
+float IniFloat( char* entry )
 {
 
 	float     f;
 	
-	GetPrivateProfileString ( SECTION, entry, "", result, MAX_RESULT, INI_FILE );
-	f = ( float )atof ( result );
+	GetPrivateProfileString( SECTION, entry, "", result, MAX_RESULT, INI_FILE );
+	f = ( float )atof( result );
 	return f;
 	
 }
@@ -73,13 +68,13 @@ float IniFloat ( char* entry )
 
 -----------------------------------------------------------------------------*/
 
-void IniFloatSet ( char* entry, float val )
+void IniFloatSet( char* entry, float val )
 {
 
 	char        buf[20];
 	
-	sprintf_s ( buf, FORMAT_FLOAT, val );
-	WritePrivateProfileString ( SECTION, entry, buf, INI_FILE );
+	sprintf_s( buf, FORMAT_FLOAT, val );
+	WritePrivateProfileString( SECTION, entry, buf, INI_FILE );
 	
 }
 
@@ -88,10 +83,10 @@ void IniFloatSet ( char* entry, float val )
 
 -----------------------------------------------------------------------------*/
 
-char* IniString ( char* entry )
+char* IniString( char* entry )
 {
 
-	GetPrivateProfileString ( SECTION, entry, "", result, MAX_RESULT, INI_FILE );
+	GetPrivateProfileString( SECTION, entry, "", result, MAX_RESULT, INI_FILE );
 	return result;
 	
 }
@@ -100,10 +95,10 @@ char* IniString ( char* entry )
 
 -----------------------------------------------------------------------------*/
 
-void IniStringSet ( char* entry, char* val )
+void IniStringSet( char* entry, char* val )
 {
 
-	WritePrivateProfileString ( SECTION, entry, val, INI_FILE );
+	WritePrivateProfileString( SECTION, entry, val, INI_FILE );
 	
 }
 
@@ -112,11 +107,11 @@ void IniStringSet ( char* entry, char* val )
 
 -----------------------------------------------------------------------------*/
 
-void IniVectorSet ( char* entry, GLvector v )
+void IniVectorSet( char* entry, GLvector v )
 {
 
-	sprintf_s ( result, FORMAT_VECTOR, v.x, v.y, v.z );
-	WritePrivateProfileString ( SECTION, entry, result, INI_FILE );
+	sprintf_s( result, FORMAT_VECTOR, v.x, v.y, v.z );
+	WritePrivateProfileString( SECTION, entry, result, INI_FILE );
 	
 }
 
@@ -124,14 +119,14 @@ void IniVectorSet ( char* entry, GLvector v )
 
 -----------------------------------------------------------------------------*/
 
-GLvector IniVector ( char* entry )
+GLvector IniVector( char* entry )
 {
 
 	GLvector  v;
 	
 	v.x = v.y = v.z = 0.0f;
-	GetPrivateProfileString ( SECTION, entry, "0 0 0", result, MAX_RESULT, INI_FILE );
-	sscanf_s ( result, FORMAT_VECTOR, &v.x, &v.y, &v.z );
+	GetPrivateProfileString( SECTION, entry, "0 0 0", result, MAX_RESULT, INI_FILE );
+	sscanf_s( result, FORMAT_VECTOR, &v.x, &v.y, &v.z );
 	return v;
 	
 }

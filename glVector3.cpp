@@ -9,60 +9,38 @@
   Functions for dealing with 3d vectors.
 
 -----------------------------------------------------------------------------*/
+#include "precompiled.h"
 
-#include <windows.h>
-#include <float.h>
-#include <math.h>
-#include <gl\gl.h>
-
-#include "macro.h"
-#include "math.h"
-#include "glTypes.h"
-
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
-GLvector glVectorReflect ( GLvector3 ray, GLvector3 normal )
+GLvector glVectorReflect( GLvector3 ray, GLvector3 normal )
 {
-
 	float       dot;
 	
-	dot = glVectorDotProduct ( ray, normal );
-	return glVectorSubtract ( ray, glVectorScale ( normal, 2.0f * dot ) );
-	
+	dot = glVectorDotProduct( ray, normal );
+	return glVectorSubtract( ray, glVectorScale( normal, 2.0f * dot ) );
 }
 
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
-GLvector3 glVector ( float x, float y, float z )
+GLvector3 glVector( float x, float y, float z )
 {
-
 	GLvector3 result;
 	
 	result.x = x;
 	result.y = y;
 	result.z = z;
 	return result;
-	
 }
 
 /*-----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------*/
 
-GLvector3 glVectorInterpolate ( GLvector3 v1, GLvector3 v2, float scalar )
+GLvector3 glVectorInterpolate( GLvector3 v1, GLvector3 v2, float scalar )
 {
 
 	GLvector3 result;
 	
-	result.x = MathInterpolate ( v1.x, v2.x, scalar );
-	result.y = MathInterpolate ( v1.y, v2.y, scalar );
-	result.z = MathInterpolate ( v1.z, v2.z, scalar );
+	result.x = MathInterpolate( v1.x, v2.x, scalar );
+	result.y = MathInterpolate( v1.y, v2.y, scalar );
+	result.z = MathInterpolate( v1.z, v2.z, scalar );
 	return result;
 	
 }
@@ -71,7 +49,7 @@ GLvector3 glVectorInterpolate ( GLvector3 v1, GLvector3 v2, float scalar )
 
 -----------------------------------------------------------------------------*/
 
-GLvector3 glVectorSubtract ( GLvector3 v1, GLvector3 v2 )
+GLvector3 glVectorSubtract( GLvector3 v1, GLvector3 v2 )
 {
 
 	GLvector3 result;
@@ -87,7 +65,7 @@ GLvector3 glVectorSubtract ( GLvector3 v1, GLvector3 v2 )
 
 -----------------------------------------------------------------------------*/
 
-GLvector3 glVectorAdd ( GLvector3 v1, GLvector3 v2 )
+GLvector3 glVectorAdd( GLvector3 v1, GLvector3 v2 )
 {
 
 	GLvector3 result;
@@ -103,10 +81,10 @@ GLvector3 glVectorAdd ( GLvector3 v1, GLvector3 v2 )
 
 -----------------------------------------------------------------------------*/
 
-float glVectorLength ( GLvector3 v )
+float glVectorLength( GLvector3 v )
 {
 
-	return ( float )sqrt ( v.x * v.x + v.y * v.y + v.z * v.z );
+	return ( float )sqrt( v.x * v.x + v.y * v.y + v.z * v.z );
 	
 }
 
@@ -114,7 +92,7 @@ float glVectorLength ( GLvector3 v )
 
 -----------------------------------------------------------------------------*/
 
-float glVectorDotProduct ( GLvector3 v1, GLvector3 v2 )
+float glVectorDotProduct( GLvector3 v1, GLvector3 v2 )
 {
 
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
@@ -125,7 +103,7 @@ float glVectorDotProduct ( GLvector3 v1, GLvector3 v2 )
 
 -----------------------------------------------------------------------------*/
 
-GLvector3 glVectorCrossProduct ( GLvector3 v1, GLvector3 v2 )
+GLvector3 glVectorCrossProduct( GLvector3 v1, GLvector3 v2 )
 {
 
 	GLvector3 result;
@@ -141,7 +119,7 @@ GLvector3 glVectorCrossProduct ( GLvector3 v1, GLvector3 v2 )
 
 -----------------------------------------------------------------------------*/
 
-GLvector3 glVectorInvert ( GLvector3 v )
+GLvector3 glVectorInvert( GLvector3 v )
 {
 
 	v.x *= -v.x;
@@ -155,7 +133,7 @@ GLvector3 glVectorInvert ( GLvector3 v )
 
 -----------------------------------------------------------------------------*/
 
-GLvector3 glVectorScale ( GLvector3 v, float scale )
+GLvector3 glVectorScale( GLvector3 v, float scale )
 {
 
 	v.x *= scale;
@@ -169,14 +147,14 @@ GLvector3 glVectorScale ( GLvector3 v, float scale )
 
 -----------------------------------------------------------------------------*/
 
-GLvector3 glVectorNormalize ( GLvector3 v )
+GLvector3 glVectorNormalize( GLvector3 v )
 {
 
 	float length;
 	
-	length = glVectorLength ( v );
-	if ( length < 0.000001f )
+	length = glVectorLength( v );
+	if( length < 0.000001f )
 		return v;
-	return glVectorScale ( v, 1.0f / length );
+	return glVectorScale( v, 1.0f / length );
 	
 }

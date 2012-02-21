@@ -18,10 +18,10 @@ private:
 	float                   m_pulse;
 	
 public:
-	CPointer ();
+	CPointer();
 	
-	void                    RenderFade ( void );
-	void                    Render ( void );
-	void                    Update ( void );
-	point                   Selected ( void );
+	void                    RenderFade( void );
+	void                    Render( void );
+	void                    Update( void );
+	point                   Selected( void );
 };

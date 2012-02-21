@@ -164,6 +164,7 @@
     <ClInclude Include="MapTexture.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Pointer.h" />
+    <ClInclude Include="precompiled.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="Terrain.h" />

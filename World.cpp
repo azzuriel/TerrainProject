@@ -11,20 +11,7 @@ This just holds some values for the lighting colors. and the direction of the
 X Y plane, so the Z value should always be zero.
 
 -----------------------------------------------------------------------------*/
-
-#include <windows.h>
-#include <math.h>
-
-#include "glTypes.h"
-#include "macro.h"
-#include "map.h"
-#include "math.h"
-#include "time.h"
-
-#include "entity.h"
-#include "sky.h"
-#include "pointer.h"
-#include "terrain.h"
+#include "precompiled.h"
 
 static GLvector       light_vector = { -0.75f, 0.25f, 0.0f};
 static GLrgba         light_color = {2.1f, 2.1f, 0.1f, 1.0f};
@@ -34,35 +21,18 @@ static float          fade;
 static long           last_update;
 static CPointer*      pointer;
 
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
 GLvector WorldLightVector ( void )
 {
-
 	return light_vector;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 float WorldFade ( void )
 {
-
 	return fade;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 GLquat WorldLightQuat ( void )
 {
-
 	GLquat      q;
 	
 	q.x = light_vector.x;
@@ -70,75 +40,40 @@ GLquat WorldLightQuat ( void )
 	q.z = light_vector.z;
 	q.w = 0.0f;
 	return q;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 GLrgba WorldLightColor ( void )
 {
-
 	return light_color;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 GLrgba WorldFogColor ( void )
 {
-
 	return fog_color;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 GLrgba WorldAmbientColor ( void )
 {
-
 	return ambient_color;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 void WorldInit ( void )
 {
-
 	CTerrain*     t;
 	
 	pointer = new CPointer ();
 	t = new CTerrain ( MapSize () );
 	new CSky ();
 	last_update = GetTickCount ();
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 void WorldTerm ( void )
 {
 
-
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 void WorldUpdate ( void )
 {
-
 	long      now;
 	long      delta;
 	
