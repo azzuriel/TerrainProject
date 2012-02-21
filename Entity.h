@@ -9,19 +9,19 @@
 class CEntity
 {
 private:
-  CEntity*                next;
+	CEntity*                next;
 protected:
 
-  char*                   m_entity_type;
+	char*                   m_entity_type;
 
 public:
-                          CEntity (void);
-  class CEntity*          Next (void);
-  virtual void            Render (void);
-  virtual void            RenderFadeIn (void);
-  virtual void            FadeStart (void);
-  virtual void            Update (void);
-  virtual char*           Type (void);
+	CEntity (void);
+	class CEntity*          Next (void);
+	virtual void            Render (void);
+	virtual void            RenderFadeIn (void);
+	virtual void            FadeStart (void);
+	virtual void            Update (void);
+	virtual char*           Type (void);
 
 };
 

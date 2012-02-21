@@ -1,14 +1,14 @@
 /*-----------------------------------------------------------------------------
 
-  World.cpp
+World.cpp
 
-  2006 Shamus Young
+2006 Shamus Young
 
 -------------------------------------------------------------------------------
 
-  This just holds some values for the lighting colors. and the direction of the
-  "sun".  REMEMBER that the light vector won't work if you move it off the 
-  X Y plane, so the Z value should always be zero. 
+This just holds some values for the lighting colors. and the direction of the
+"sun".  REMEMBER that the light vector won't work if you move it off the 
+X Y plane, so the Z value should always be zero. 
 
 -----------------------------------------------------------------------------*/
 
@@ -41,7 +41,7 @@ static CPointer*      pointer;
 GLvector WorldLightVector (void)
 {
 
-  return light_vector;
+	return light_vector;
 
 }
 
@@ -52,7 +52,7 @@ GLvector WorldLightVector (void)
 float WorldFade (void)
 {
 
-  return fade;
+	return fade;
 
 }
 
@@ -63,13 +63,13 @@ float WorldFade (void)
 GLquat WorldLightQuat (void)
 {
 
-  GLquat      q;
+	GLquat      q;
 
-  q.x = light_vector.x;
-  q.y = light_vector.y;
-  q.z = light_vector.z;
-  q.w = 0.0f;
-  return q;
+	q.x = light_vector.x;
+	q.y = light_vector.y;
+	q.z = light_vector.z;
+	q.w = 0.0f;
+	return q;
 
 }
 
@@ -80,7 +80,7 @@ GLquat WorldLightQuat (void)
 GLrgba WorldLightColor (void)
 {
 
-  return light_color;
+	return light_color;
 
 }
 
@@ -91,7 +91,7 @@ GLrgba WorldLightColor (void)
 GLrgba WorldFogColor (void)
 {
 
-  return fog_color;
+	return fog_color;
 
 }
 
@@ -102,7 +102,7 @@ GLrgba WorldFogColor (void)
 GLrgba WorldAmbientColor (void)
 {
 
-  return ambient_color;
+	return ambient_color;
 
 }
 
@@ -113,12 +113,12 @@ GLrgba WorldAmbientColor (void)
 void WorldInit (void)
 {
 
-  CTerrain*     t;
+	CTerrain*     t;
 
-  pointer = new CPointer ();
-  t = new CTerrain (MapSize ());
-  new CSky ();
-  last_update = GetTickCount ();
+	pointer = new CPointer ();
+	t = new CTerrain (MapSize ());
+	new CSky ();
+	last_update = GetTickCount ();
 
 }
 
@@ -139,16 +139,16 @@ void WorldTerm (void)
 void WorldUpdate (void)
 {
 
-  long      now;
-  long      delta;
+	long      now;
+	long      delta;
 
-  now = GetTickCount ();
-  delta = now - last_update;
-  last_update = now;
+	now = GetTickCount ();
+	delta = now - last_update;
+	last_update = now;
 
-  fade += (float)delta / 500.0f;
-  if (fade > 1.0f) {
-    EntityFadeStart (); 
-    fade = 0.0f;
-  }
+	fade += (float)delta / 500.0f;
+	if (fade > 1.0f) {
+		EntityFadeStart (); 
+		fade = 0.0f;
+	}
 }

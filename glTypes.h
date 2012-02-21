@@ -3,44 +3,44 @@
 
 struct GLquat
 {
-  float       x;
-  float       y;
-  float       z;
-  float       w;
+	float       x;
+	float       y;
+	float       z;
+	float       w;
 };
 
 struct GLvector
 {
-  float       x;
-  float       y;
-  float       z;
+	float       x;
+	float       y;
+	float       z;
 };
 
 typedef GLvector       GLvector3;
 
 struct GLvector2
 {
-  float       x;
-  float       y;
+	float       x;
+	float       y;
 };
 
 struct GLrgba
 {
-  float       red;
-  float       green;
-  float       blue;
-  float       alpha;
+	float       red;
+	float       green;
+	float       blue;
+	float       alpha;
 };
 
 struct GLmatrix
 {
-  float       elements[4][4];
+	float       elements[4][4];
 };
 
 struct GLbbox
 {
-  GLvector3   min;
-  GLvector3   max;
+	GLvector3   min;
+	GLvector3   max;
 };
 
 

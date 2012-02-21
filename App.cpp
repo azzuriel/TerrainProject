@@ -1,12 +1,12 @@
 /*-----------------------------------------------------------------------------
 
-  App.cpp
+App.cpp
 
-  2006 Shamus Young
+2006 Shamus Young
 
 -------------------------------------------------------------------------------
 
-  This module contains the core of the program.  
+This module contains the core of the program.  
 
 -----------------------------------------------------------------------------*/
 
@@ -38,7 +38,7 @@ static HINSTANCE      instance;
 HINSTANCE AppInstance ()
 {
 
-  return instance;
+	return instance;
 
 }
 
@@ -50,29 +50,29 @@ HINSTANCE AppInstance ()
 void AppQuit ()
 {
 
-  quit = true;
+	quit = true;
 
 }
 
 /*-----------------------------------------------------------------------------
-                                W i n M a i n
+W i n M a i n
 -----------------------------------------------------------------------------*/
 
 int PASCAL WinMain (HINSTANCE instance_in, HINSTANCE previous_instance,
-  LPSTR command_line, int show_style)
+	LPSTR command_line, int show_style)
 {
 
- 	MSG		  msg;
-  instance = instance_in;
-  WinInit ();
-  ConsoleInit ();
-  CameraInit ();
-  RenderInit ();
-  TextureInit ();
-  MapInit ();
-  MapTextureInit ();
-  WorldInit ();
-  EntityInit ();
+	MSG		  msg;
+	instance = instance_in;
+	WinInit ();
+	ConsoleInit ();
+	CameraInit ();
+	RenderInit ();
+	TextureInit ();
+	MapInit ();
+	MapTextureInit ();
+	WorldInit ();
+	EntityInit ();
 	while (!quit) {
 		if (PeekMessage(&msg,NULL,0,0,PM_REMOVE))	{
 			if (msg.message == WM_QUIT)	
@@ -81,27 +81,27 @@ int PASCAL WinMain (HINSTANCE instance_in, HINSTANCE previous_instance,
 				TranslateMessage(&msg);				// Translate The Message
 				DispatchMessage(&msg);				// Dispatch The Message
 			}
-    } else	{
-      //update
-      CameraUpdate ();
-      EntityUpdate ();
-      MapUpdate ();
-      MapTextureUpdate ();
-      WorldUpdate ();
-      RenderUpdate ();
-      Sleep (1);
-    }
-  }
-  EntityTerm ();
-  TextureTerm ();
-  MapTerm ();
-  MapTextureTerm ();
-  WorldTerm ();
-  RenderTerm ();
-  CameraTerm ();
-  ConsoleTerm ();
-  WinTerm ();
-  return 0;
+		} else	{
+			//update
+			CameraUpdate ();
+			EntityUpdate ();
+			MapUpdate ();
+			MapTextureUpdate ();
+			WorldUpdate ();
+			RenderUpdate ();
+			Sleep (1);
+		}
+	}
+	EntityTerm ();
+	TextureTerm ();
+	MapTerm ();
+	MapTextureTerm ();
+	WorldTerm ();
+	RenderTerm ();
+	CameraTerm ();
+	ConsoleTerm ();
+	WinTerm ();
+	return 0;
 
 }
 
