@@ -1,9 +1,14 @@
-GLrgba    WorldAmbientColor( void );
-float     WorldFade( void );
-GLrgba    WorldFogColor( void );
-GLvector  WorldLightVector( void );
-GLquat    WorldLightQuat( void );
-GLrgba    WorldLightColor( void );
-void      WorldInit( void );
-void      WorldTerm( void );
-void      WorldUpdate( void );
+#ifndef TERRAIN_PROJECT_H
+#define TERRAIN_PROJECT_H
+
+rgba	WorldAmbientColor( void );
+float	WorldFade( void );
+rgba	WorldFogColor( void );
+vec3	WorldLightVector( void );
+vec4	WorldLightQuat( void );
+rgba	WorldLightColor( void );
+void	WorldInit( void );
+void	WorldTerm( void );
+void	WorldUpdate( void );
+
+#endif

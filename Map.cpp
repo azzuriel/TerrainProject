@@ -60,11 +60,11 @@ different program altogether.
 
 struct cell {
 	unsigned char layer[LAYER_COUNT - 1];
-	bool          shadow;
-	float         distance;//move this to low-res sub-map?
-	GLvector      position;
-	GLvector      normal;
-	GLrgba        light;
+	bool	shadow;
+	float	distance;//move this to low-res sub-map?
+	vec3	position;
+	vec3	normal;
+	rgba	light;
 };
 
 static struct cell    map[MAP_SIZE][MAP_SIZE];
@@ -77,16 +77,16 @@ static int            scan_y;
 This will take the given elevations and calculte the resulting surface normal.
 -----------------------------------------------------------------------------*/
 
-static GLvector DoNormal( float north, float south, float east, float west )
+static vec3 DoNormal( float north, float south, float east, float west )
 {
-
-	GLvector    result;
+	vec3	result;
 	
 	result.x = west - east;
 	result.y = 2.0f;
 	result.z = north - south;
-	return glVectorNormalize( result );
-	
+	result.Normalize();
+
+	return result;
 }
 
 
@@ -95,33 +95,24 @@ GetPixel is SLOW!  It takes a ridiculous ammount of time to sample colors using
 GetPixel, so we get the raw data and use this function to extract arbitrary
 bits and use them to fill a full byte
 -----------------------------------------------------------------------------*/
-
-static unsigned char rgb_sample( short val, int shift, int numbits )
+static uint8_t rgb_sample( uint16_t val, int shift, int numbits )
 {
-
-	unsigned char     r;
+	uint8_t r;
 	
 	r = val >> shift;
 	r &= ( int )( pow( 2.0f, numbits ) - 1 );
 	r = r << ( 8 - numbits );
 	return r & 255;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 void MapSave()
 {
-
 	FILE*      f;
 	
 	fopen_s( &f, MAP_FILE, "wb" );
 	fwrite( map, sizeof( map ), 1, f );
 	fclose( f );
 	Console( "Saved %s (%d bytes)", MAP_FILE, sizeof( map ) );
-	
 }
 
 /*-----------------------------------------------------------------------------
@@ -137,34 +128,32 @@ seperate program with all sorts of options for controling these magic
 numbers.
 
 -----------------------------------------------------------------------------*/
-
 void MapBuild( void )
 {
-
-	HBITMAP         basemap;
-	BITMAPINFO      bmi;
-	GLrgba*         cmap;
-	cell*           c;
-	short           val;
-	int             width, height;
-	int             x, y;
-	int             xx, yy;
-	int             max_x, max_y;
-	int             left;
-	int             right;
-	int             top;
-	int             bottom;
-	int             samples;
-	float           high, low;
-	float           smooth;
-	float           e;
-	unsigned char   r, g, b;
-	unsigned char*  basebits;
-	float*          scale;
+	HBITMAP		basemap;
+	BITMAPINFO	bmi;
+	rgba*		cmap;
+	cell*		c;
+	short		val;
+	int			width, height;
+	int			x, y;
+	int			xx, yy;
+	int			max_x, max_y;
+	int			left;
+	int			right;
+	int			top;
+	int			bottom;
+	int			samples;
+	float		high, low;
+	float		smooth;
+	float		e;
+	uint8_t		r, g, b;
+	uint8_t*	basebits;
+	float*		scale;
 	
 	//get a couple of temp buffers to use below
 	scale = new float[MAP_CELLS];
-	cmap = new GLrgba [MAP_CELLS];
+	cmap = new rgba[MAP_CELLS];
 	Console( "size = %d", sizeof( cell ) );
 	//now load the bitmap
 	dc = CreateCompatibleDC( GetDC( NULL ) );
@@ -272,7 +261,7 @@ void MapBuild( void )
 	for( x = 0; x < MAP_SIZE; x++ ) {
 		for( y = 0; y < MAP_SIZE; y++ ) {
 			c = &map[x][y];
-			c->distance = glVectorLength( glVectorSubtract( c->position, CameraPosition() ) );
+			c->distance = (c->position - CameraPosition()).Length();
 			c->distance /= FAR_VIEW;
 			c->distance = CLAMP( c->distance, 0.0f, 1.0f );
 		}
@@ -343,55 +332,39 @@ void MapBuild( void )
 	
 }
 
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
 bool MapLoad()
 {
-
-	FILE*       f;
-	int         r;
+	FILE*	f;
+	int		r;
 	
 	fopen_s( &f, MAP_FILE, "rb" );
 	if( !f ) {
 		Console( "MapLoad: Unable to load %s", MAP_FILE );
 		return false;
 	}
+	
 	r = fread( map, sizeof( map ), 1, f );
+	
 	if( r < 1 ) {
 		Console( "MapLoad: Error loading %s", MAP_FILE );
 		return false;
 	}
+	
 	fclose( f );
 	return true;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 void MapInit( void )
 {
-
 	if( !MapLoad() || FORCE_REBUILD )
 		MapBuild();
-		
 }
-
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 float MapElevation( int x, int y )
 {
-
 	x = CLAMP( x, 0, MAP_AREA );
 	y = CLAMP( y, 0, MAP_AREA );
 	return map[x][y].position.y;
-	
 }
 
 
@@ -399,18 +372,16 @@ float MapElevation( int x, int y )
 Get the elevation of an arbitrary point over the terrain.  This will
 interpolate between points so that we can have collision with the suface.
 -----------------------------------------------------------------------------*/
-
 float MapElevation( float x, float y )
 {
-
-	int     cell_x;
-	int     cell_y;
-	float   a;
-	float   b;
-	float   c;
-	float   y0, y1, y2, y3;
-	float   dx;
-	float   dy;
+	int		cell_x;
+	int		cell_y;
+	float	a;
+	float	b;
+	float	c;
+	float	y0, y1, y2, y3;
+	float	dx;
+	float	dy;
 	
 	cell_x = ( int )x;
 	cell_y = ( int )y;
@@ -432,31 +403,18 @@ float MapElevation( float x, float y )
 		a = y0;
 	}
 	return ( a + b * dx + c * dy );
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 int MapSize()
 {
-
 	return MAP_AREA;
-	
 }
 
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
-GLvector MapPosition( int x, int y )
+vec3 MapPosition( int x, int y )
 {
-
 	x = CLAMP( x, 0, MAP_AREA );
 	y = CLAMP( y, 0, MAP_AREA );
 	return map[x][y].position;
-	
 }
 
 /*-----------------------------------------------------------------------------
@@ -466,10 +424,8 @@ entry out of the array.  This means we have to subtract 1 from the given index.
 Confusing, but this grid is big and there is no sense in storing half a million
 redundant values.
 -----------------------------------------------------------------------------*/
-
 float MapLayer( int x, int y, int layer )
 {
-
 	//the base layer is always opaque
 	if( layer == LAYER_GRASS )
 		return 1.0f;
@@ -477,7 +433,6 @@ float MapLayer( int x, int y, int layer )
 	x = CLAMP( x, 0, MAP_AREA );
 	y = CLAMP( y, 0, MAP_AREA );
 	return ( float )map[x][y].layer[layer] / 255.0f;
-	
 }
 
 /*-----------------------------------------------------------------------------
@@ -485,61 +440,46 @@ How far is the given point from the camera?  These values are updated during
 TerrainUpdate () and are rarely 100% accurate.  These are used when calculating
 detail on the terrain.
 -----------------------------------------------------------------------------*/
-
 float MapDistance( int x, int y )
 {
-
 	x = CLAMP( x, 0, MAP_AREA );
 	y = CLAMP( y, 0, MAP_AREA );
 	return map[x][y].distance;
-	
 }
 
 /*-----------------------------------------------------------------------------
 The the lighting color of the given point.
 -----------------------------------------------------------------------------*/
-
-GLrgba MapLight( int x, int y )
+rgba MapLight( int x, int y )
 {
-
 	x = CLAMP( x, 0, MAP_AREA );
 	y = CLAMP( y, 0, MAP_AREA );
 	return map[x][y].light;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 void MapTerm( void )
 {
 
 }
 
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
 void MapUpdate( void )
 {
-
-	int       x;
-	int       samples;
-	int       start, end, step;
-	GLvector  light;
-	GLrgba    ambient, sun, shadow;
-	float     dot;
-	float     top;
-	float     drop;
-	float     shade;
-	cell*     c;
-	unsigned  update_end;
+	int			x;
+	int			samples;
+	int			start, end, step;
+	vec3		light;
+	rgba		ambient, sun, shadow;
+	float		dot;
+	float		top;
+	float		drop;
+	float		shade;
+	cell*		c;
+	uint32_t	update_end;
 	
 	light = WorldLightVector();
 	sun = WorldLightColor();
 	ambient = WorldAmbientColor();
-	shadow = glRgbaMultiply( ambient, glRgba( 0.3f, 0.5f, 0.9f ) );
+	shadow = ( ambient * rgba( 0.3f, 0.5f, 0.9f ) );
 	if( light.x > 0.0f ) {
 		start = MAP_AREA;
 		end = -1;
@@ -560,7 +500,7 @@ void MapUpdate( void )
 		//are being hit with sunlight.
 		for( x = start; x != end; x += step ) {
 			c = &map[x][scan_y];
-			c->distance = glVectorLength( glVectorSubtract( c->position, CameraPosition() ) );
+			c->distance = ( c->position - CameraPosition() ).Length();
 			c->distance /= FAR_VIEW;
 			c->distance = CLAMP( c->distance, 0.0f, 1.0f );
 			if( x == start ) {  //first point is always in sunlight
@@ -575,7 +515,7 @@ void MapUpdate( void )
 					c->shadow = true;
 				}
 			}
-			dot = glVectorDotProduct( light, c->normal );
+			dot = Dot( light, c->normal );
 			dot = CLAMP( dot, 0.0f, 1.0f );
 			samples = 0;
 			shade = 0.0f;
@@ -591,9 +531,9 @@ void MapUpdate( void )
 			}
 			//finally! We know how much light is hitting this point and if it is in shadow
 			//now figure out what color this point is
-			c->light = glRgbaInterpolate(
-						   glRgbaAdd( ambient, glRgbaScale( sun, dot ) ),
-						   glRgbaAdd( shadow, glRgbaScale( ambient, dot ) ),
+			c->light.Lerp(
+							( ambient + ( sun * dot ) ),
+							( shadow + ( ambient * dot ) ),
 						   shade / ( float )samples );
 		}
 		scan_y = ( scan_y + 1 ) % MAP_SIZE;

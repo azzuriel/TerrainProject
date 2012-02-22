@@ -5,9 +5,6 @@
       <UniqueIdentifier>{ef96ec36-5f8e-4366-8d3d-0ae2fd7c0ef3}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
-    <Filter Include="Source Files\glTypes">
-      <UniqueIdentifier>{3bfb8943-02f7-48f2-9a64-49e9ff007afe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{bd9c81e7-25fb-4ce4-a209-c09e4e2e8649}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
@@ -18,24 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="glBbox.cpp">
-      <Filter>Source Files\glTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="glMatrix.cpp">
-      <Filter>Source Files\glTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="glQuat.cpp">
-      <Filter>Source Files\glTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="glRgba.cpp">
-      <Filter>Source Files\glTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="glVector2.cpp">
-      <Filter>Source Files\glTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="glVector3.cpp">
-      <Filter>Source Files\glTypes</Filter>
-    </ClCompile>
     <ClCompile Include="App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,6 +63,18 @@
     <ClCompile Include="bmp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aabb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rgba.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -96,9 +87,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="glTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ini.h">
@@ -144,6 +132,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="precompiled.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="aabb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rgba.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

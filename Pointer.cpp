@@ -14,8 +14,6 @@ This stuff is very slapdash and doesn't work very well. The big flaw is that
 once it has a few squares in the selection buffer, it needs to sort by depth.
 Right now if you are close to the ground it may grab real estate on the wrong
 side of the hill.
-
-
 -----------------------------------------------------------------------------*/
 
 #define PT_SIZE		8
@@ -23,16 +21,11 @@ side of the hill.
 
 #include "precompiled.h"
 
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
 void CPointer::Render()
 {
-
-	int         cell_x, cell_y;
-	GLvector    p;
-	GLvector    pos = CameraPosition();
+	int		cell_x, cell_y;
+	vec3	p;
+	vec3	pos = CameraPosition();
 	
 	glPushAttrib( GL_POLYGON_BIT | GL_LIGHTING_BIT | GL_FOG_BIT );
 	glDisable( GL_DEPTH_TEST );
@@ -47,8 +40,8 @@ void CPointer::Render()
 	glColor3f( 1.0f, 0.5f, 0.0f );
 	cell_x = ( int )( pos.x - 0.5f ) + MapSize() / 2;
 	cell_y = ( int )( pos.z - 0.5f ) + MapSize() / 2;
-	cell_x = m_last_cell.x;
-	cell_y = m_last_cell.y;
+	cell_x = static_cast<int>(m_last_cell.x);
+	cell_y = static_cast<int>(m_last_cell.y);
 	glBegin( GL_QUADS );
 	glTexCoord2f( 0.0f, 0.0f );
 	p = MapPosition( cell_x - PT_HALF, cell_y - PT_HALF );
@@ -80,22 +73,16 @@ void CPointer::Render()
 	glEnable( GL_DEPTH_TEST );
 	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 	glEnable( GL_CULL_FACE );
-	
 }
 
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
-static point DrawGrid( void )
+static vec2 DrawGrid( void )
 {
-
-	int         x, y;
-	int         block;
-	int	        hits;
-	unsigned int buffer[512];							// Set Up A Selection Buffer
-	GLvector    v1, v2, v3, v4;
-	point       cell;
+	int			x, y;
+	int			block;
+	int			hits;
+	uint32_t	buffer[512];							// Set Up A Selection Buffer
+	vec3		v1, v2, v3, v4;
+	vec2		cell;
 	
 	memset( buffer, 0, sizeof( buffer ) );
 	// Tell OpenGL To Use Our Array For Selection
@@ -122,37 +109,29 @@ static point DrawGrid( void )
 			glEnd();
 		}
 	}
+
 	hits = glRenderMode( GL_RENDER );
 	cell.x = cell.y = -1;
 	if( hits > 0 ) {
 		block = buffer[3];
-		cell.x = block % MapSize() + PT_HALF;
-		cell.y = ( block - cell.x ) / MapSize() + PT_HALF;
+		cell.x = static_cast<float>(block % MapSize() + PT_HALF);
+		cell.y = static_cast<float>(( block - cell.x ) / MapSize() + PT_HALF);
 		
 	}
 	return cell;
-	
-	
-	
 }
-
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 void CPointer::Update()
 {
-
-	point       p;
-	int	        viewport[4];
-	GLvector    pos;
-	GLvector    angle;
-	unsigned long    t;
+	vec2		p;
+	int			viewport[4];
+	vec3		pos;
+	vec3		angle;
+	uint64_t	t;
 	
 	t = GetTickCount() % 3600;
 	m_pulse = ( float )sin((( float )t / 10.0f ) * DEGREES_TO_RADIANS ) * 1.0f;
-	WinMousePosition( p.x, p.y );
+	WinMousePosition( p );
 	if( m_last_mouse.x == p.x && m_last_mouse.y == p.y )
 		return;
 	m_last_mouse = p;
@@ -178,30 +157,16 @@ void CPointer::Update()
 	glMatrixMode( GL_PROJECTION );
 	glPopMatrix();
 	glMatrixMode( GL_MODELVIEW );
-	
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 CPointer::CPointer()
 {
-
 	m_last_cell.x = m_last_cell.y = -1;
 	m_texture = TextureFromName( "ring" );
 	m_entity_type = "pointer";
-	
 }
 
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
-point CPointer::Selected()
+vec2 CPointer::Selected()
 {
-
 	return m_last_cell;
-	
 }

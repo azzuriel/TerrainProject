@@ -129,13 +129,12 @@ void RenderInit( void )
 
 void RenderUpdate( void )
 {
-
-	GLquat          light_vector;
-	GLrgba          light_color;
-	GLrgba          ambient_color;
-	GLrgba          fog_color;
-	GLvector        pos;
-	GLvector        angle;
+	vec4	light_vector;
+	rgba	light_color;
+	rgba	ambient_color;
+	rgba	fog_color;
+	vec3	pos;
+	vec3	angle;
 	
 	light_vector = WorldLightQuat();
 	light_color = WorldLightColor();

@@ -1,6 +1,9 @@
-#define DEGREES_TO_RADIANS      .017453292F
-#define RADIANS_TO_DEGREES      57.29577951F
-#define PI                      ((double)3.1415926535F)
+#ifndef TERRAINPROJECT_MACRO_H
+#define TERRAINPROJECT_MACRO_H
+
+#define DEGREES_TO_RADIANS      .017453292f
+#define RADIANS_TO_DEGREES      57.29577951f
+#define PI                      ((double)3.1415926535f)
 #define PI2                     PI*PI
 #define GRAVITY                 9.5f
 
@@ -14,3 +17,5 @@
 
 #define POW(x,y)                (float)pow(x,y)
 #define SWAP(a,b)               {int temp = a;a = b; b = temp;}
+
+#endif

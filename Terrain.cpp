@@ -12,21 +12,23 @@ Here is where the magic happens.  This generates the terrain and renders it.
 
 -----------------------------------------------------------------------------*/
 
-
 #define POINT(x,y)      m_point[x + y * m_map_size]
 
 //MAGIC NUMBER: Fiddle with this to adjust how agressive the program should be
 //in removing polygons.  Higher numbers result in fewer terrain polygons
-#define TOLERANCE       0.07f
+#define TOLERANCE		0.07f
+
 //How many milliseconds to spend each frame on the terrain
-#define UPDATE_TIME     10
+#define UPDATE_TIME		10
+
 //Set this to 1 to force a wirefrome overlay on the terrain, so you can see
 //the polygons.
-#define DO_WIREFRAME    0
+#define DO_WIREFRAME	0
+
 //Set this to 0 to skip rendering the terrain as solid. You'll need to set
 //either this one or DO_WIREFRAME to 1, or you won't render anything!
 ///You can set both to 1 if you like as well.
-#define DO_SOLID        1
+#define DO_SOLID		1
 
 #include "precompiled.h"
 
@@ -35,38 +37,30 @@ static uint32_t	layer_texture[LAYER_COUNT];
 /*-----------------------------------------------------------------------------
 Used during compile: add a vertex
 -----------------------------------------------------------------------------*/
-
 void CTerrain::CompileVertex( int x, int y )
 {
-
 	glTexCoord2fv( &m_zone_uv[( x  - m_zone_origin_x ) + ( y - m_zone_origin_y ) *( m_zone_size + 1 )].x );
-	GLvector p = MapPosition( x, y );
+	vec3 p = MapPosition( x, y );
 	glVertex3fv( &p.x );
 	m_vertices++;
-	
 }
 
 /*-----------------------------------------------------------------------------
 Used during compile:Add a triangle to the render list.
 -----------------------------------------------------------------------------*/
-
 void CTerrain::CompileTriangle( int x1, int y1, int x2, int y2, int x3, int y3 )
 {
-
 	CompileVertex( x3, y3 );
 	CompileVertex( x2, y2 );
 	CompileVertex( x1, y1 );
 	m_triangles++;
-	
 }
 
 /*-----------------------------------------------------------------------------
 Used during compile:Add a triangle to the render list.
 -----------------------------------------------------------------------------*/
-
 void CTerrain::CompileFan( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5 )
 {
-
 	glEnd();
 	glBegin( GL_TRIANGLE_FAN );
 	CompileVertex( x1, y1 );
@@ -77,16 +71,13 @@ void CTerrain::CompileFan( int x1, int y1, int x2, int y2, int x3, int y3, int x
 	glEnd();
 	m_triangles += 3;
 	glBegin( GL_TRIANGLES );
-	
 }
 
 /*-----------------------------------------------------------------------------
 Used during compile:Add a triangle fan to the render list.
 -----------------------------------------------------------------------------*/
-
 void CTerrain::CompileFan( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int x5, int y5, int x6, int y6 )
 {
-
 	glEnd();
 	glBegin( GL_TRIANGLE_FAN );
 	CompileVertex( x1, y1 );
@@ -98,16 +89,13 @@ void CTerrain::CompileFan( int x1, int y1, int x2, int y2, int x3, int y3, int x
 	glEnd();
 	m_triangles += 4;
 	glBegin( GL_TRIANGLES );
-	
 }
 
 /*-----------------------------------------------------------------------------
 Used during compile:Add a triangle strip to the render list.
 -----------------------------------------------------------------------------*/
-
 void CTerrain::CompileStrip( int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4 )
 {
-
 	glEnd();
 	glBegin( GL_TRIANGLE_STRIP );
 	CompileVertex( x1, y1 );
@@ -117,7 +105,6 @@ void CTerrain::CompileStrip( int x1, int y1, int x2, int y2, int x3, int y3, int
 	glEnd();
 	m_triangles += 2;
 	glBegin( GL_TRIANGLES );
-	
 }
 
 /*-----------------------------------------------------------------------------
@@ -145,15 +132,13 @@ four triangles.  (Fig. b)  If the edges are active, then the block is cut
 into a combination of smaller triangles (Fig. c) and sub-blocks (Fig. d).
 
 -----------------------------------------------------------------------------*/
-
 void CTerrain::CompileBlock( int x, int y, int size )
 {
-
-	int     x2;
-	int     y2;
-	int     xc;
-	int     yc;
-	int     next_size;
+	int		x2;
+	int		y2;
+	int		xc;
+	int		yc;
+	int		next_size;
 	
 	//Define the shape of this block.  x and y are the upper-left (Northwest)
 	//origin, xc and yc define the center, and x2, y2 mark the lower-right
@@ -169,6 +154,7 @@ void CTerrain::CompileBlock( int x, int y, int size )
 		CompileStrip( x, y, x, y2, x2, y, x2, y2 );
 		return;
 	}
+
 	//if the edges are inactive, we need 4 triangles (fig b)
 	if( !POINT( xc, y ) &&
 			!POINT( xc, y2 ) &&
@@ -177,6 +163,7 @@ void CTerrain::CompileBlock( int x, int y, int size )
 		CompileFan( xc, yc, x, y, x2, y, x2, y2, x, y2, x, y );
 		return;
 	}
+
 	//if the top & bottom edges are inactive, it is impossible to have
 	//sub-blocks, so we can make a single fan
 	if( !POINT( xc, y ) && !POINT( xc, y2 ) ) {
@@ -201,6 +188,7 @@ void CTerrain::CompileBlock( int x, int y, int size )
 		glBegin( GL_TRIANGLES );
 		return;
 	}
+
 	//if the left & right edges are inactive, it is impossible to have
 	//sub-blocks, so we can make a single fan
 	if( !POINT( x, yc ) && !POINT( x2, yc ) ) {
@@ -225,6 +213,7 @@ void CTerrain::CompileBlock( int x, int y, int size )
 		glBegin( GL_TRIANGLES );
 		return;
 	}
+
 	//none of the other tests worked, which means this block is a combination
 	//of triangle strips and sub-blocks. Brace yourself, this is not for the timid.
 	//the first step is to find out which triangles we need
@@ -250,6 +239,7 @@ void CTerrain::CompileBlock( int x, int y, int size )
 			glBegin( GL_TRIANGLES );
 		}
 	}
+
 	if( !POINT( xc, y2 ) ) {   //is the bottom edge inactive?
 		if( POINT( x, yc ) && POINT( x2, yc ) ) {    //top and bottom edge active?
 			CompileFan( xc, yc, x2, yc, x2, y2, x, y2, x, yc );
@@ -272,6 +262,7 @@ void CTerrain::CompileBlock( int x, int y, int size )
 			glBegin( GL_TRIANGLES );
 		}
 	}
+
 	if( !POINT( x, yc ) ) {   //is the left edge inactive?
 		if( POINT( xc, y ) && POINT( xc, y2 ) ) {    //top and bottom edge active?
 			CompileFan( xc, yc, xc, y2, x, y2, x, y, xc, y );
@@ -294,6 +285,7 @@ void CTerrain::CompileBlock( int x, int y, int size )
 			glBegin( GL_TRIANGLES );
 		}
 	}
+
 	if( !POINT( x2, yc ) ) {   //right edge inactive?
 		if( POINT( xc, y ) && POINT( xc, y2 ) ) {
 			CompileFan( xc, yc, xc, y, x2, y, x2, y2, xc, y2 );
@@ -316,6 +308,7 @@ void CTerrain::CompileBlock( int x, int y, int size )
 			glBegin( GL_TRIANGLES );
 		}
 	}
+
 	//now that the various triangles have been added, we add the
 	//various sub-blocks.  This is recursive.
 	if( POINT( xc, y ) && POINT( x, yc ) )
@@ -326,7 +319,6 @@ void CTerrain::CompileBlock( int x, int y, int size )
 		CompileBlock( x, y + next_size, next_size );  //Sub-block C
 	if( POINT( x2, yc ) && POINT( xc, y2 ) )
 		CompileBlock( x + next_size, y + next_size, next_size );  //Sub-block D
-		
 }
 
 /*-----------------------------------------------------------------------------
@@ -336,10 +328,8 @@ So, we can compile zones a few at a time during updates. (If we did them all
 at once it would cause a massive pause) Once they are all complete, we start
 rendering the new grid of lists.
 -----------------------------------------------------------------------------*/
-
 void CTerrain::Compile( void )
 {
-
 	unsigned long   compile_start;
 	unsigned        list;
 	int             x, y;
@@ -395,6 +385,7 @@ void CTerrain::Compile( void )
 	}
 	glEndList();
 	m_zone++;
+
 	if( m_zone == ZONES ) {
 		if( DO_WIREFRAME && DO_SOLID ) {
 			m_vertices /= 2;
@@ -413,10 +404,8 @@ This is used by the incrmental building code in Update ().  This will cause X
 and Y to traverse the entire mesh, and then advance to the next stage of
 building.
 -----------------------------------------------------------------------------*/
-
 void CTerrain::GridStep( void )
 {
-
 	m_x++;
 	if( m_x > m_map_size ) {
 		m_x = 0;
@@ -449,8 +438,8 @@ CTerrain::CTerrain( int size )
 	m_map_half = size / 2;
 	m_tolerance = TOLERANCE;
 	m_zone_size = m_map_size / ZONE_GRID;
-	m_viewpoint = glVector( 0.0f, 0.0f, 0.0f );
-	m_boundry = new short[size];
+	m_viewpoint = vec3( 0.0f, 0.0f, 0.0f );
+	m_boundry = new uint16_t[size];
 	m_point = new bool[size * size];
 	m_entity_type = "terrain";
 	//This finds the largest power-of-two denominator for the given number.  This
@@ -471,7 +460,7 @@ CTerrain::CTerrain( int size )
 		}
 	}
 	//this maps out a grid of uv values so that a texture will fit exactly over a zone
-	m_zone_uv = new GLvector2[( m_zone_size + 1 ) *( m_zone_size + 1 )];
+	m_zone_uv = new vec2[( m_zone_size + 1 ) *( m_zone_size + 1 )];
 	for( int x = 0; x <= m_zone_size; x++ ) {
 		for( int y = 0; y <= m_zone_size; y++ ) {
 			m_zone_uv[x + y *( m_zone_size + 1 )].x = ((( float )x / ( float )m_zone_size ) );
@@ -609,13 +598,13 @@ values, the more non-coplanar this quad is.
 void CTerrain::DoQuad( int x1, int y1, int size )
 {
 
-	int       xc, yc, x2, y2;
-	int       half;
-	float     ul, ur, ll, lr, center;
-	float     average;
-	float     delta, dist;
-	float     size_bias;
-	GLvector  pos;
+	int		xc, yc, x2, y2;
+	int		half;
+	float	ul, ur, ll, lr, center;
+	float	average;
+	float	delta, dist;
+	float	size_bias;
+	vec3	pos;
 	
 	half = size / 2;
 	xc = x1 + half;
@@ -682,11 +671,11 @@ triangles, and compiled for rendering.
 void CTerrain::Update( void )
 {
 
-	unsigned long   end;
-	unsigned long   now;
-	int             xx, yy;
-	int             level;
-	GLvector        newpos;
+	uint64_t	end;
+	uint64_t	now;
+	int			xx, yy;
+	int			level;
+	vec3		newpos;
 	
 	now = GetTickCount();
 	end = now + UPDATE_TIME;
@@ -745,5 +734,4 @@ void CTerrain::Update( void )
 		}
 	}
 	m_build_time += GetTickCount() - now;
-	
 }

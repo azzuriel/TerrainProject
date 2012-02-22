@@ -74,15 +74,13 @@ Which zone is the camera over?
 
 static void GetCameraZone( void )
 {
-
-	GLvector          cam;
-	int               zone_size;
+	vec3	cam;
+	int		zone_size;
 	
 	cam = CameraPosition();
 	zone_size = MapSize() / ZONE_GRID;
 	camera_zone_x = (( int )cam.x + ( MapSize() / 2 ) ) / zone_size;
 	camera_zone_y = (( int )cam.z + ( MapSize() / 2 ) ) / zone_size;
-	
 }
 
 /*-----------------------------------------------------------------------------
@@ -91,8 +89,7 @@ Get the current texture for the requested zone
 
 unsigned MapTexture( int zone )
 {
-
-	int     grid;
+	int	grid;
 	
 	grid = OPPOSITE( current_grid );
 	//if the very last texture is requested, then we know the terrain is about
@@ -105,18 +102,12 @@ unsigned MapTexture( int zone )
 	if( !zone_texture[grid][zone].ready )
 		return 0;
 	return zone_texture[grid][zone].texture;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 void MapTextureInit( void )
 {
-
-	int       grid;
-	int       zone;
+	int	grid;
+	int	zone;
 	
 	for( grid = GRID_FRONT; grid < GRID_COUNT; grid++ ) {
 		for( zone = 0; zone < ZONES; zone++ ) {
@@ -145,30 +136,19 @@ void MapTextureInit( void )
 	
 }
 
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
-
 void MapTextureTerm( void )
 {
-
 	delete[] buffer;
-	
 }
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 
 static void DrawLayer( int origin_x, int origin_y, int size, int layer )
 {
-
-	GLrgba          color1, color2;
-	int             step;
-	int             x, y, xx, yy, y2;
-	float           cell_size;
-	bool            drawing;
-	bool            blank;
+	rgba	color1, color2;
+	int		step;
+	int		x, y, xx, yy, y2;
+	float	cell_size;
+	bool	drawing;
+	bool	blank;
 	
 	glBindTexture( GL_TEXTURE_2D, layer_texture[layer] );
 	cell_size = size / ( float )zone_size;
@@ -231,7 +211,7 @@ static void DrawLayer( int origin_x, int origin_y, int size, int layer )
 		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 		return;
 	}
-	color1 = color2 = glRgba( 1.0f );
+	color1 = color2 = rgba( 1.0f, 1.0f, 1.0f );
 	for( y = -1; y < zone_size + step + step; y += step ) {
 		drawing = false;
 		blank = true;

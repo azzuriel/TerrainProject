@@ -10,12 +10,12 @@ Create the main window and make it go.
 
 -----------------------------------------------------------------------------*/
 
+#include "precompiled.h"
+
 #define CONSOLE_SIZE	30000
 #define CONSOLE_PAGE	1000
 #define MOUSE_MOVEMENT	0.4f
 #define MAX_STRING		128
-
-#include "precompiled.h"
 
 static HWND         hwnd;
 static HINSTANCE    module;
@@ -24,8 +24,8 @@ static int          height;
 static bool         lmb;
 static bool         rmb;
 static bool         mouse_forced;
-static point        mouse_pos;
-static point        select_pos;
+static vec2        mouse_pos;
+static vec2        select_pos;
 
 /*
 ====================
@@ -70,7 +70,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 {
 	RECT	r;
 	float	delta_x, delta_y;
-	point	p;
+	vec2	p;
 	
 	switch( message ) 	{
 	case WM_MOVE:
@@ -93,7 +93,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 		lmb = false;
 		if( !rmb ) {
 			ReleaseCapture();
-			MoveCursor( select_pos.x, select_pos.y );
+			MoveCursor( static_cast<int>(select_pos.x), static_cast<int>(select_pos.y) );
 		}
 		break;
 		
@@ -101,7 +101,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 		rmb = false;
 		if( !lmb ) {
 			ReleaseCapture();
-			MoveCursor( select_pos.x, select_pos.y );
+			MoveCursor( static_cast<int>(select_pos.x), static_cast<int>(select_pos.y) );
 		}
 		break;
 		
@@ -154,7 +154,7 @@ void WinPopup( char* message, ... )
 	va_start( marker, message );
 	vsprintf_s( buf, message, marker );
 	va_end( marker );
-	MessageBox( NULL, buf, APP_TITLE, MB_ICONSTOP | MB_OK | MB_TASKMODAL );
+	MessageBox( NULL, buf, APP_TITLE.c_str(), MB_ICONSTOP | MB_OK | MB_TASKMODAL );
 }
 
 int WinWidth( void )
@@ -162,10 +162,10 @@ int WinWidth( void )
 	return width;
 }
 
-void WinMousePosition( int& x, int& y )
+void WinMousePosition( vec2& v )
 {
-	x = select_pos.x;
-	y = select_pos.y;
+	v.x = select_pos.x;
+	v.y = select_pos.y;
 }
 
 int WinHeight( void )
@@ -183,10 +183,6 @@ HWND WinHwnd( void )
 	return hwnd;
 }
 
-
-/*-----------------------------------------------------------------------------
-
------------------------------------------------------------------------------*/
 /*
 ====================
 WinInit
@@ -208,7 +204,7 @@ bool WinInit( void )
 	wcex.hCursor		= LoadCursor( NULL, IDC_ARROW );
 	wcex.hbrBackground	= ( HBRUSH )( COLOR_BTNFACE + 1 );
 	wcex.lpszMenuName	= NULL;
-	wcex.lpszClassName	= APP_TITLE;
+	wcex.lpszClassName	= APP_TITLE.c_str();
 	wcex.hIconSm		= NULL;
 	
 	if( !RegisterClassEx( &wcex ) ) {
@@ -216,7 +212,7 @@ bool WinInit( void )
 		return false;
 	}
 	
-	if( !( hwnd = CreateWindowEx( 0, APP_TITLE, APP_TITLE, WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+	if( !( hwnd = CreateWindowEx( 0, APP_TITLE.c_str(), APP_TITLE.c_str(), WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 								  CW_USEDEFAULT, 0, 544, 640, NULL, NULL, AppInstance(), NULL ) ) ) {
 		WinPopup( "Cannot create window" );
 		return false;

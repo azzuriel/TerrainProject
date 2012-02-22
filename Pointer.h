@@ -1,27 +1,22 @@
-#ifndef ENTITY
-#include "entity.h"
-#endif
-
-struct point {
-	int   x;
-	int   y;
-};
+#ifndef TERRAINPROJECT_POINTER_H
+#define TERRAINPROJECT_POINTER_H
 
 class CPointer : public CEntity
 {
-
 private:
-	GLvector                m_position;
-	point                   m_last_mouse;
-	point                   m_last_cell;
-	int                     m_texture;
-	float                   m_pulse;
+	vec3	m_position;
+	vec2	m_last_mouse;
+	vec2	m_last_cell;
+	int		m_texture;
+	float	m_pulse;
 	
 public:
-	CPointer();
+			CPointer();
 	
-	void                    RenderFade( void );
-	void                    Render( void );
-	void                    Update( void );
-	point                   Selected( void );
+	void	RenderFade( void );
+	void	Render( void );
+	void	Update( void );
+	vec2	Selected( void );
 };
+
+#endif

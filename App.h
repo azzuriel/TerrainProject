@@ -1,5 +1,7 @@
-#define APP_TITLE       "TerrainProject"
-#define APP             "terrain"
+#ifndef TERRAINPROJECT_APP_H
+#define TERRAINPROJECT_APP_H
 
 HINSTANCE AppInstance();
 void      AppQuit();
+
+#endif

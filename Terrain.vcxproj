@@ -127,13 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aabb.cpp" />
     <ClCompile Include="bmp.cpp" />
-    <ClCompile Include="glBbox.cpp" />
-    <ClCompile Include="glMatrix.cpp" />
-    <ClCompile Include="glQuat.cpp" />
-    <ClCompile Include="glRgba.cpp" />
-    <ClCompile Include="glVector2.cpp" />
-    <ClCompile Include="glVector3.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Console.cpp" />
@@ -142,33 +137,39 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapTexture.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Pointer.cpp" />
     <ClCompile Include="Render.cpp" />
+    <ClCompile Include="rgba.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Win.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="aabb.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="bmp.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="glext.h" />
-    <ClInclude Include="glTypes.h" />
     <ClInclude Include="Ini.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapTexture.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Pointer.h" />
     <ClInclude Include="precompiled.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="rgba.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Vector.h" />
     <ClInclude Include="Win.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

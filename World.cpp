@@ -13,15 +13,15 @@ X Y plane, so the Z value should always be zero.
 -----------------------------------------------------------------------------*/
 #include "precompiled.h"
 
-static GLvector       light_vector = { -0.75f, 0.25f, 0.0f};
-static GLrgba         light_color = {2.1f, 2.1f, 0.1f, 1.0f};
-static GLrgba         ambient_color = {0.6f, 0.6f, 0.6f, 1.0f};
-static GLrgba         fog_color = {0.7f, 0.7f, 0.7f, 1.0f};
-static float          fade;
-static long           last_update;
-static CPointer*      pointer;
+static vec3			light_vector( -0.75f, 0.25f, 0.0f );
+static rgba			light_color( 2.1f, 2.1f, 0.1f, 1.0f );
+static rgba			ambient_color( 0.6f, 0.6f, 0.6f, 1.0f );
+static rgba			fog_color( 0.7f, 0.7f, 0.7f, 1.0f );
+static float		fade;
+static long			last_update;
+static CPointer*	pointer;
 
-GLvector WorldLightVector ( void )
+vec3 WorldLightVector ( void )
 {
 	return light_vector;
 }
@@ -31,28 +31,29 @@ float WorldFade ( void )
 	return fade;
 }
 
-GLquat WorldLightQuat ( void )
+vec4 WorldLightQuat ( void )
 {
-	GLquat      q;
+	vec4 q;
 	
 	q.x = light_vector.x;
 	q.y = light_vector.y;
 	q.z = light_vector.z;
 	q.w = 0.0f;
+
 	return q;
 }
 
-GLrgba WorldLightColor ( void )
+rgba WorldLightColor ( void )
 {
 	return light_color;
 }
 
-GLrgba WorldFogColor ( void )
+rgba WorldFogColor ( void )
 {
 	return fog_color;
 }
 
-GLrgba WorldAmbientColor ( void )
+rgba WorldAmbientColor ( void )
 {
 	return ambient_color;
 }
@@ -74,8 +75,8 @@ void WorldTerm ( void )
 
 void WorldUpdate ( void )
 {
-	long      now;
-	long      delta;
+	long	now;
+	long	delta;
 	
 	now = GetTickCount ();
 	delta = now - last_update;
